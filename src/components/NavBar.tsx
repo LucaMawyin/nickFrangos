@@ -1,6 +1,6 @@
-import NavLink from '@/components/NavLink'
+import NavLink from "@/components/NavLink"
 
-function NavBar(props : {pageList : string[]}){
+export default function NavBar(props : {pageList : string[]}){
     return (
         <header className="
         bg-white
@@ -17,7 +17,7 @@ function NavBar(props : {pageList : string[]}){
                     <NavLink 
                         key={page}
                         title={capitalize(page)}
-                        link={page === 'about' ? '/#about' : `/${page}`}
+                        link={page === "about" ? "/#about" : `/${page}`}
                     />
                 ))}
             </nav>
@@ -35,5 +35,3 @@ function capitalize(str : string) : string{
             .map(word=> word.charAt(0).toUpperCase()+word.slice(1))
             .join(" ");
 }
-
-export default NavBar;

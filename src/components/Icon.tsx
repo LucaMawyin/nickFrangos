@@ -1,25 +1,23 @@
 
-function Icon(prop : {path : string, link : string}){
+export default function Icon(props : {path : string, link : string}){
 
-    const iconPath = `/icons/${prop.path}.svg`;
+    const iconPath = `/icons/${props.path}.svg`;
 
     return (
         <a 
-            href={prop.link} 
+            href={props.link} 
             onClick={()=>(
-                prop.link === "" ? alert(`${prop.path} Not Implemented Yet`) : null
+                props.link === "" ? alert(`${props.path} Not Implemented Yet`) : null
             )}
-            target={prop.link === "" ? '' : '_blank'} 
+            target={props.link === "" ? "" : "_blank"} 
             rel="noopener noreferrer"
         >
 
             <img 
                 src={iconPath} 
-                alt={prop.path} 
+                alt={props.path} 
                 className="h-15 w-auto self-start transform transition-transform duration-(--transition-time) hover:scale-110"
             />
         </a>
     );
 }
-
-export default Icon

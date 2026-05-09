@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import './global.css'
-import Title from '@/components/Title'
-import Button from '@/components/Button'
-import Icon from '@/components/Icon';
-import About from '@/components/About';
+import "./global.css";
+import Title from "@/components/Title"
+import Button from "@/components/Button"
+import Icon from "@/components/Icon";
+import About from "@/components/About";
 
 export default function Home() {
 
@@ -75,13 +75,21 @@ export default function Home() {
             </div>
           </div>
 
-          <img
-            src="/images/headshot.jpg"
-            alt="Headshot"
-            className={`flex-[1_1_30%] min-w-[30%] p-[2%] h-auto object-contain 
-            duration-800 ease-out
-            ${loaded ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"}`}
-          />
+          <div
+            className="
+              flex-[1_1_30%] 
+              min-w-[30%] p-[2%] h-auto"
+          >
+            <img
+              src="/images/headshot.jpg"
+              alt="Headshot"
+              className={`
+                rounded-3xl
+                duration-800 ease-out
+                ${loaded ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"}`}
+            />
+          </div>
+
 
         </div>
       </section>

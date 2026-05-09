@@ -1,5 +1,5 @@
 import { headers } from "next/headers";
-import Tile from '@/components/Tile';
+import Tile from "@/components/Tile";
 
 
 type Article = {
@@ -47,12 +47,15 @@ export default async function Article(){
                         className="max-w-full min-w-0 h-full w-full"
                         titleClassName="text-[clamp(1.25rem,2.5vw,2.25rem)]"
                     >
-                        <p>
-                            {new Date(article.created_at).toLocaleDateString(
-                                "en-US", 
-                                {year : "numeric", month:"long", day:"numeric"}
-                            )}
-                        </p>
+                        <div className="p-4">
+                            <p>
+                                {new Date(article.created_at).toLocaleDateString(
+                                    "en-US", 
+                                    {year : "numeric", month:"long", day:"numeric"}
+                                )}
+                            </p>
+                        </div>
+
                     </Tile>
                 ))
             )}

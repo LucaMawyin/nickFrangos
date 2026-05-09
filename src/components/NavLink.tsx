@@ -1,8 +1,8 @@
 "use client";
-import Link from 'next/link'
+import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 
-function NavLink(props: { title: string; link: string }){
+export default function NavLink(props: { title: string; link: string }){
 
     const pathName = usePathname();
     const router = useRouter();
@@ -46,5 +46,3 @@ function NavLink(props: { title: string; link: string }){
         </Link>
     );
 }
-
-export default NavLink;
