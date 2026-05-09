@@ -78,4 +78,18 @@ VALUES (
         'NFL teams use the draft to rebuild rosters, focusing on long-term development rather than instant impact.',
         1,
         CURRENT_TIMESTAMP
+    ),
+    (
+        'How NHL Special Teams Decide Games',
+        'nhl-special-teams-decide-games',
+        'Power plays and penalty kills are often the difference-makers in NHL games, especially during tight matchups and playoffs.',
+        1,
+        CURRENT_TIMESTAMP
+    ),
+    (
+        'The Importance of Defense in the Modern NBA',
+        'importance-of-defense-modern-nba',
+        'While offense gets most of the attention, elite NBA teams still rely on strong defensive systems to win championships.',
+        0,
+        NULL
     );
