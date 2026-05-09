@@ -41,6 +41,10 @@
 		{
 		"pattern": "nicholasfrangos.com",
 		"custom_domain": true
+		},
+		{
+			"pattern": "www.nicholasfrangos.com",
+			"custom_domain": false
 		}
 	]
 
