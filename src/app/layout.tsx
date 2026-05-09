@@ -1,4 +1,4 @@
-import "./css/index.css";
+import "./global.css";
 import NavBar from "@/components/NavBar";
 
 const pages = ["about", "articles"];

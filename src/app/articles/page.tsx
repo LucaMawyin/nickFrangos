@@ -1,7 +1,6 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import { headers } from "next/headers";
 import Tile from '@/components/Tile';
+
 
 type Article = {
     id: number;
@@ -11,43 +10,21 @@ type Article = {
 };
 
 
-export default function Article(){
+export default async function Article(){
     
-    const [articles, setArticles] = useState<Article[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [success, setSuccess] = useState(false);
+    const h = await headers();
+    const host = h.get("host");
 
+    const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
 
-    useEffect(() => {
-        
-        const fetchData = async () => {
-            try { 
-                const response = await fetch('/api/articles', {
-                    cache: "no-store",
-                });
-                
-                const data: { articles?: Article[] } = await response.json();
+    const response = await fetch(
+        `${protocol}://${host}/api/articles`,
+        { cache: "no-store" }
+    );
 
+    const data: {articles? : Article[]} = await response.json();
 
-                if (data.articles){
-                    setArticles(data.articles);
-                    setSuccess(true);
-                }
-
-                else{
-                    setSuccess(false);
-                    setArticles([]);
-                }
-
-            }catch(error){
-                setSuccess(false);
-            }finally {
-                setLoading(false)
-            }
-        }
-
-        fetchData()
-    }, [])
+    const articles = data.articles ?? [];
 
     return (
         <div className="
@@ -60,33 +37,25 @@ export default function Article(){
             place-items-stretch
         ">
 
-            {loading && <p>Loading...</p>}
-
-            {!loading && articles.length === 0 && (
+            {articles.length === 0 ? (
                 <h1>Failed to load articles</h1>
-            )}
-
-            {success && articles.map( article => (
-                <Tile 
-                    key={article.id} 
-                    title={article.title} 
-                    className="max-w-full min-w-0 h-full w-full"
-                    titleClassName="text-[clamp(1.25rem,2.5vw,2.25rem)]"
-                >
-                    <div>
+            ) : (
+                articles.map((article) => (
+                    <Tile 
+                        key = {article.id}
+                        title={article.title}
+                        className="max-w-full min-w-0 h-full w-full"
+                        titleClassName="text-[clamp(1.25rem,2.5vw,2.25rem)]"
+                    >
                         <p>
                             {new Date(article.created_at).toLocaleDateString(
                                 "en-US", 
-                                {
-                                    year: "numeric",
-                                    month: "long",
-                                    day: "numeric",
-                                }
+                                {year : "numeric", month:"long", day:"numeric"}
                             )}
                         </p>
-                    </div>
-                </Tile>
-            ))}
+                    </Tile>
+                ))
+            )}
             
         </div>
     );

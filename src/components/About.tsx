@@ -1,5 +1,3 @@
-import Image from 'next/image'
-import headshot from '@/app/assets/images/headshot.jpg'
 import Tile from '@/components/Tile'
 
 function About(){
@@ -11,8 +9,8 @@ function About(){
             gap-y-[5vh] py-[5vh] min-h-[90vh]'>
 
             <Tile title="About Me">
-                <Image 
-                    src={headshot} 
+                <img 
+                    src="/images/headshot.jpg" 
                     alt="Headshot"
                     className='max-w-[75%] p-[5%] self-center'/>
                 <p>Name: Nicholas</p>
