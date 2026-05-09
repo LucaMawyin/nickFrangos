@@ -1,5 +1,5 @@
 import "./css/index.css";
-import NavBar from "./elements/NavBar";
+import NavBar from "@/components/NavBar";
 
 const pages = ["about", "articles"];
 

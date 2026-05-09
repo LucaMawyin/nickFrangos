@@ -1,6 +1,6 @@
 import Image from 'next/image'
-import headshot from '../assets/images/headshot.jpg'
-import Tile from './Tile'
+import headshot from '@/app/assets/images/headshot.jpg'
+import Tile from '@/components/Tile'
 
 function About(){
     

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Tile from '../elements/Tile';
+import Tile from '@/components/Tile';
 
 type Article = {
     id: number;
@@ -40,7 +40,6 @@ export default function Article(){
                 }
 
             }catch(error){
-                console.log(error);
                 setSuccess(false);
             }finally {
                 setLoading(false)

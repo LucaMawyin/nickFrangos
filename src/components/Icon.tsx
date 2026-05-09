@@ -1,7 +1,7 @@
 
 function Icon(prop : {path : string, link : string}){
 
-    const iconPath = `icons/${prop.path}.svg`;
+    const iconPath = `/icons/${prop.path}.svg`;
 
     return (
         <a 

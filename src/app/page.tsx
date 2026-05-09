@@ -4,10 +4,10 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import './css/index.css'
 import headshot from './assets/images/headshot.jpg'
-import Title from './elements/Title'
-import Button from './elements/Button'
-import Icon from './elements/Icon';
-import About from './elements/About';
+import Title from '@/components/Title'
+import Button from '@/components/Button'
+import Icon from '@/components/Icon';
+import About from '@/components/About';
 
 export default function Home() {
 
