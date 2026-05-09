@@ -15,33 +15,33 @@ export default function Article(){
     
     const [articles, setArticles] = useState<Article[]>([]);
     const [loading, setLoading] = useState(true);
-    const [success, setSuccess] = useState(true);
+    const [success, setSuccess] = useState(false);
 
 
     useEffect(() => {
         
         const fetchData = async () => {
             try { 
-                const data = await fetch('/api/articles', {
+                const response = await fetch('/api/articles', {
                     cache: "no-store",
                 });
                 
-                const response: { articles?: Article[] } = await data.json();
+                const data: { articles?: Article[] } = await response.json();
 
 
-                if (response.articles){
-                    setArticles(response.articles);
-                    
+                if (data.articles){
+                    setArticles(data.articles);
+                    setSuccess(true);
                 }
 
                 else{
+                    setSuccess(false);
                     setArticles([]);
                 }
-                setSuccess(true);
-                console.log("done");
 
             }catch(error){
                 console.log(error);
+                setSuccess(false);
             }finally {
                 setLoading(false)
             }

@@ -36,7 +36,6 @@
 		"enabled": true
 	},
 	"upload_source_maps": true,
-
 	"routes": [
 		{
 			"pattern": "nicholasfrangos.com",
@@ -46,8 +45,15 @@
 			"pattern": "www.nicholasfrangos.com",
 			"custom_domain": true
 		}
+	],
+	"d1_databases": [
+		{
+			"binding": "nicholas_db",
+			"database_name": "nicholas_db",
+			"database_id": "14846110-71d4-4589-9190-325335617ce9",
+			"remote": true
+		}
 	]
-
 	/**
 	 * Smart Placement
 	 * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
