@@ -10,10 +10,7 @@ export function middleware(req: NextRequest) {
     const isProtected = protectedRoutes.some(route =>
         path.startsWith(normalize(route))
     );
-
-    console.log("path:", path);
-    console.log("protectedRoutes:", protectedRoutes);
-
+    
     if (isProtected && !session) {
         const loginUrl = new URL("/login", req.url);
         loginUrl.searchParams.set("next", path);
