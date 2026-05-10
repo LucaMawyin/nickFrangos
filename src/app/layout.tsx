@@ -6,6 +6,7 @@ const pages = [
   { title: "Articles", href: "articles",requireLogin : false },
   { title: "Write", href: "articles/create-article", requireLogin : true },
   { title: "Login", href: "login", requireLogin : false },
+  { title: "Logout", href: "logout", requireLogin : true },
 ];
 
 export const metadata = {

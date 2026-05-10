@@ -4,7 +4,7 @@ import NavLink from "@/components/NavLink"
 import { Page } from "@/lib/types";
 import { useState } from "react";
 
-export default function NavBar(
+export default function NavBarClient(
     props : {
         pageList : Page[];
         session : string | null;
@@ -28,7 +28,9 @@ export default function NavBar(
                 <NavLink title="Nicholas" link="/" />
                 <nav className="flex gap-6">
                     {props.pageList.map((page) => (
-                        (!page.requireLogin || props.session) && (
+                        (!page.requireLogin || props.session) && 
+                        !(page.href === "login" && props.session) && 
+                        (
                             <NavLink 
                                 key={page.href}
                                 title={capitalize(page.title)}
@@ -101,7 +103,9 @@ export default function NavBar(
 
 
                 {props.pageList.map((page) => (
-                    (!page.requireLogin || props.session) && (
+                    (!page.requireLogin || props.session) && 
+                    !(page.href === "login" && props.session) && 
+                    (
                         <div
                             key={page.href}
                             onClick={() => {setOpen(false)}}
