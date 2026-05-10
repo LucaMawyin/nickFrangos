@@ -1,8 +1,9 @@
 "use client";
 
+import { useState } from "react";
+import { useEffect } from "react";
 import NavLink from "@/components/NavLink"
 import { Page } from "@/lib/types";
-import { useState } from "react";
 
 export default function NavBarClient(
     props : {
@@ -11,6 +12,18 @@ export default function NavBarClient(
 }){
 
     const [ open, setOpen ] = useState(false);
+
+    useEffect(() => {
+        if (open) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "";
+        }
+
+        return () => {
+            document.body.style.overflow = "";
+        };
+    }, [open]);
 
     return (
         <>
