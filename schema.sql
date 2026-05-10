@@ -3,7 +3,8 @@ CREATE TABLE articles (
     title TEXT NOT NULL,
     slug TEXT NOT NULL UNIQUE,
     content TEXT NOT NULL,
-    is_published BOOLEAN DEFAULT 0,
+    is_published BOOLEAN DEFAULT 1,
+    is_draft BOOLEAN DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     published_at DATETIME
