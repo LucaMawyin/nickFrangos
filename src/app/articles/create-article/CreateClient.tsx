@@ -2,7 +2,6 @@
 
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { LoginResponse } from "@/lib/types";
 import Tile from "@/components/Tile"
 import Button from "@/components/Button";

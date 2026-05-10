@@ -2,9 +2,10 @@ import "./global.css";
 import NavBar from "@/components/NavBar";
 
 const pages = [
-  { title: "About", href: "about" },
-  { title: "Articles", href: "articles" },
-  { title: "Write", href: "articles/create-article" },
+  { title: "About", href: "#about", requireLogin : false },
+  { title: "Articles", href: "articles",requireLogin : false },
+  { title: "Write", href: "articles/create-article", requireLogin : true },
+  { title: "Login", href: "login", requireLogin : false },
 ];
 
 export const metadata = {
