@@ -40,13 +40,21 @@ export async function POST(request : Request){
             );
         }
 
+        const sessionToken = crypto.randomUUID();
+
+        await db.prepare(`
+            INSERT INTO sessions (token, user_id, expires_at)
+            VALUES (?, ?, datetime('now', '+7 days'))
+        `).bind(sessionToken, user.id).run();
+
         const res = NextResponse.json({ success: true });
 
-        res.cookies.set("session", String(user.id), {
+        res.cookies.set("session", sessionToken, {
             httpOnly: true,
-            secure: true,
+            secure: process.env.NODE_ENV === "production",
             sameSite: "lax",
             path: "/",
+            maxAge: 60 * 60 * 24 * 7,
         });
 
         return res;
