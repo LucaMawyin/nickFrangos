@@ -2,20 +2,23 @@
 
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation"
-import Form from "next/form"
+import { LoginResponse } from "@/lib/types";
 import Tile from "@/components/Tile"
 import Button from "@/components/Button";
 
 
 export default function Create(){
 
-  const [text, setText] = useState("");
-  const [preview, setPreview] = useState<string | null>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-
   const router = useRouter();
 
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
 
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+
+
+  // Handling thumbnail for post
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -24,7 +27,31 @@ export default function Create(){
     }
   };
 
-  const inputClass = "border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+  async function handleSubmit(e : React.FormEvent){
+    e.preventDefault();
+    const response = await fetch("/api/articles", {
+      method:"POST",
+      headers:{
+        "Content-Type" : "application/json",
+      },
+      body:JSON.stringify({
+        title,
+        content,
+      }),
+    });
+
+    if (response.ok) {
+      router.push("/articles");
+    } 
+    else if (response.status == 401){
+      router.push("/login");
+    }
+    else {
+      const data = await response.json() as LoginResponse;
+      alert(data.error || "Failed to create article");
+    }
+
+  }
 
   return (
     <div 
@@ -35,28 +62,29 @@ export default function Create(){
         disableHover={true}
         className="lg:max-w-[40vw] max-w-full"
         >
-        <Form 
+        <form 
           className="
             w-full
             flex flex-col
             justify-center
             gap-3"
-          action={()=>{}}
+          onSubmit={handleSubmit}
         >
           <label htmlFor="title">Title</label>
           <input 
-            id="title" 
-            className={inputClass} 
+            id="title"  
             type="text" 
             name="title" 
+            onChange={(e) => setTitle(e.target.value)}
             placeholder="Write an interesting title" 
           />
 
           <label htmlFor="content">Content</label>
           <textarea 
             id="content" 
-            className={`${inputClass} min-h-75`}
+            className="min-h-75"
             name="content" 
+            onChange={(e) => setContent(e.target.value)}
             placeholder="Start writing your article" />
           
           <label htmlFor="thumbnail">Thumbnail</label>
@@ -91,7 +119,7 @@ export default function Create(){
               }}
             />
           </div>
-        </Form>
+        </form>
       </Tile>
 
     </div>

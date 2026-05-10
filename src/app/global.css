@@ -24,3 +24,14 @@ body {
 section {
   scroll-margin-top: 10vh;
 }
+
+input,textarea{
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-md);
+  padding: calc(var(--spacing) * 2);
+}
+
+input:focus,textarea:focus{
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-blue-400);
+}

@@ -12,8 +12,6 @@ export default function Button(props : {
     function clickEvent() {
         if (props.onClick) {
             props.onClick();
-        } else {
-            alert(`${props.text} Not Available Yet`);
         }
     }
 
