@@ -30,6 +30,7 @@ export default function Login(){
         if (response.ok) {
             setError(null);
             router.push("/articles");
+            router.refresh();
         } else {
             const data = await response.json() as LoginResponse;
             setError(data.error || "Login failed");

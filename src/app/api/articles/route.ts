@@ -11,9 +11,14 @@ export async function GET() {
     .prepare("SELECT * FROM articles")
     .all();
 
-  return Response.json({
-    articles: results,
-  });
+  const articles = results.map((a: any) => ({
+    ...a,
+    image: a.image
+      ? Buffer.from(a.image).toString("base64")
+      : null,
+  }));
+
+  return Response.json({ articles });
 }
 
 // POST for create-article 
@@ -29,7 +34,17 @@ export async function POST(req: Request) {
     );
   }
   try {
-    const { title, content } = await req.json() as Article;
+    const formData = await req.formData();
+    const title = formData.get("title") as string;
+    const content = formData.get("content") as string;
+    const file = formData.get("image") as File | null;
+
+    let imageBuffer: Buffer | null = null;
+
+    if (file){
+      const arrayBuffer = await file.arrayBuffer();
+      imageBuffer = Buffer.from(arrayBuffer);
+    }
 
     const db = await getDB();
 
@@ -50,8 +65,8 @@ export async function POST(req: Request) {
     }
 
     await db
-      .prepare("INSERT INTO articles (title, content, slug) VALUES (?, ?, ?)")
-      .bind(title, content, slug)
+      .prepare("INSERT INTO articles (title, content, image, slug) VALUES (?, ?, ?, ?)")
+      .bind(title, content, imageBuffer, slug)
       .run();
 
     return NextResponse.json({ success: true });

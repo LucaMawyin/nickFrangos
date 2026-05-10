@@ -16,28 +16,32 @@ export default function Create(){
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [ imageFile, setImageFile ] = useState<File | null>(null);
 
 
   // Handling thumbnail for post
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Create a local URL for previewing
+      setImageFile(file);
       setPreview(URL.createObjectURL(file));
     }
   };
 
   async function handleSubmit(e : React.FormEvent){
     e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("content", content);
+
+    if (imageFile) { 
+      formData.append("image", imageFile);
+    }
+
     const response = await fetch("/api/articles", {
       method:"POST",
-      headers:{
-        "Content-Type" : "application/json",
-      },
-      body:JSON.stringify({
-        title,
-        content,
-      }),
+      body:formData,
     });
 
     if (response.ok) {
