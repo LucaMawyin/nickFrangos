@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server";
 export function middleware(req: NextRequest) {
     const session = req.cookies.get("session")?.value;
 
-    const isProtectedRoute = req.nextUrl.pathname.startsWith("/create");
+    const isProtectedRoute = req.nextUrl.pathname.startsWith("/create-article");
 
     if (isProtectedRoute && !session) {
         return NextResponse.redirect(new URL("/login", req.url));
@@ -14,5 +14,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-    matcher: ["/create"],
+    matcher: ["/create-article"],
 };

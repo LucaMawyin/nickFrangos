@@ -9,12 +9,12 @@ import { LoginResponse } from "@/lib/types";
 
 export default function Login(){
 
-    const [showPassword, setShowPassword] = useState(false);
-
     const router = useRouter();
 
+    const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState<string | null>(null);
 
     async function handleSubmit(e : React.FormEvent){
         e.preventDefault();
@@ -28,11 +28,11 @@ export default function Login(){
         });
 
         if (response.ok) {
+            setError(null);
             router.push("/articles");
-            alert("Successfully Logged In")
         } else {
             const data = await response.json() as LoginResponse;
-            alert(data.error || "Login failed");
+            setError(data.error || "Login failed");
         }
 
     }
@@ -82,6 +82,12 @@ export default function Login(){
                             {showPassword ? "Hide" : "Show"}
                         </button>
                     </div>
+
+                    {error && (
+                        <p className="text-red-500 text-sm text-center">
+                            {error}
+                        </p>
+                    )}
 
                     <Button 
                         text="Login" 

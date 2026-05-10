@@ -11,7 +11,7 @@ export async function POST(request : Request){
 
         if (!email || !password) {
             return NextResponse.json(
-                { error: "Missing credentials" },
+                { error: "Missing Credentials" },
                 { status: 400 }
             );
         }
@@ -35,7 +35,7 @@ export async function POST(request : Request){
  
         if (!isValid) {
             return NextResponse.json(
-                { error: "Invalid credentials" },
+                { error: "Invalid Credentials" },
                 { status: 401 }
             );
         }
@@ -54,7 +54,7 @@ export async function POST(request : Request){
 
     catch (err) {
         return NextResponse.json(
-            { error: "Server error" },
+            { error: "Server Error" },
             { status: 500 }
         );
     }

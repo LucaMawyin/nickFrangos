@@ -3,7 +3,7 @@ import { getDB } from "@/lib/db";
 import { Article } from "@/lib/types";
 import { cookies } from "next/headers";
 
-
+// Fetching articles
 export async function GET() {
   const db = await getDB();
 
@@ -16,6 +16,7 @@ export async function GET() {
   });
 }
 
+// POST for create-article 
 export async function POST(req: Request) {
 
   const cookieStore = await cookies();
@@ -43,7 +44,7 @@ export async function POST(req: Request) {
 
     if (existing) {
       return NextResponse.json(
-        { error: "Article already exists" },
+        { error: "Article Already Exists" },
         { status: 400 }
       );
     }
@@ -58,7 +59,7 @@ export async function POST(req: Request) {
     console.error(err);
 
     return NextResponse.json(
-      { error: "Failed to create article" },
+      { error: "Failed to Create Article" },
       { status: 500 }
     );
   }
