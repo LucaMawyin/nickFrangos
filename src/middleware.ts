@@ -1,18 +1,31 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { protectedRoutes } from "./lib/protectedRoutes";
+
+const normalize = (p: string) => (p.startsWith("/") ? p : "/" + p);
 
 export function middleware(req: NextRequest) {
     const session = req.cookies.get("session")?.value;
+    const path = req.nextUrl.pathname;
+    const isProtected = protectedRoutes.some(route =>
+        path.startsWith(normalize(route))
+    );
 
-    const isProtectedRoute = req.nextUrl.pathname.startsWith("/create-article");
+    console.log("path:", path);
+    console.log("protectedRoutes:", protectedRoutes);
 
-    if (isProtectedRoute && !session) {
-        return NextResponse.redirect(new URL("/login", req.url));
+    if (isProtected && !session) {
+        const loginUrl = new URL("/login", req.url);
+        loginUrl.searchParams.set("next", path);
+
+        return NextResponse.redirect(loginUrl);
     }
 
     return NextResponse.next();
 }
 
 export const config = {
-    matcher: ["/create-article"],
+    matcher: [
+        "/((?!_next/static|_next/image|favicon.ico).*)",
+    ],
 };

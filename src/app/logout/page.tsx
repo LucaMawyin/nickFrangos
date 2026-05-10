@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import Button from "@/components/Button";
 
 
 export default function Logout() {
@@ -14,6 +13,7 @@ export default function Logout() {
         method: "POST",
         });
 
+        router.replace("/")
         router.refresh();
     }
     logout();
@@ -29,13 +29,7 @@ export default function Logout() {
         justify-center items-center"
     >
         <h1>Successfully Logged Out</h1>
-        <Button 
-            text="Return to Home"
-            onClick={() => {
-                router.push("/");
-                router.refresh();
-            }} 
-        />
+        <h1>Redirecting to Home...</h1>
     </div>
   );
 }

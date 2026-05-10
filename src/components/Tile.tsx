@@ -14,7 +14,7 @@ export default function Tile(props : {
             flex-col
             
             ${props.className?.includes("max-w")? "" : "max-w-[40vw]"} 
-            ${props.className?.includes("min-w")? "" : "min-w-75"}
+            ${props.className?.includes("min-w")? "" : "min-w-87.5"}
             rounded-xl 
             shadow-[0_15px_30px_rgba(0,0,0,0.25)] 
             p-[2%]
