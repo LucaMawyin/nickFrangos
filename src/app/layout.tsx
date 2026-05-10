@@ -1,7 +1,11 @@
 import "./global.css";
 import NavBar from "@/components/NavBar";
 
-const pages = ["about", "articles"];
+const pages = [
+  { title: "About", href: "about" },
+  { title: "Articles", href: "articles" },
+  { title: "Write", href: "articles/create-article" },
+];
 
 export const metadata = {
     title: "Nicholas Frangos",

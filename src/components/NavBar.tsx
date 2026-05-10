@@ -1,6 +1,11 @@
 import NavLink from "@/components/NavLink"
 
-export default function NavBar(props : {pageList : string[]}){
+type Page = {
+    title:string;
+    href:string;
+}
+
+export default function NavBar(props : {pageList : Page[]}){
     return (
         <header className="
         bg-white
@@ -15,9 +20,9 @@ export default function NavBar(props : {pageList : string[]}){
             <nav className="flex gap-6">
                 {props.pageList.map((page) => (
                     <NavLink 
-                        key={page}
-                        title={capitalize(page)}
-                        link={page === "about" ? "/#about" : `/${page}`}
+                        key={page.href}
+                        title={capitalize(page.title)}
+                        link={page.href === "about" ? "/#about" : `/${page.href}`}
                     />
                 ))}
             </nav>
