@@ -7,8 +7,6 @@ export default async function LoginPage() {
     const cookieStore = await cookies();
     const token = cookieStore.get("session")?.value;
 
-    let isLoggedIn = false;
-
     if (!token){
       redirect("/login");
     }
