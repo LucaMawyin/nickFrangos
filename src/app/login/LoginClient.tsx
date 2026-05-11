@@ -94,7 +94,7 @@ export default function Login(props : {isLoggedIn : boolean}){
                             id="password"
                             type={showPassword ? "text" : "password"}
                             name="password"
-                            autoComplete="email"
+                            autoComplete="current-password"
                             className="flex-1"
                             onChange={(e) => setPassword(e.target.value)}
                             required
