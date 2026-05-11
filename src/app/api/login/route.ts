@@ -41,11 +41,16 @@ export async function POST(request : Request){
         }
 
         const sessionToken = crypto.randomUUID();
+        const userIP =
+            request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+            request.headers.get("x-real-ip") ||
+            "unknown";
+        const userAgent = request.headers.get("user-agent") || "unknown";
 
         await db.prepare(`
-            INSERT INTO sessions (token, user_id, expires_at)
-            VALUES (?, ?, datetime('now', '+7 days'))
-        `).bind(sessionToken, user.id).run();
+            INSERT INTO sessions (token, user_id, expires_at, ip_address, user_agent)
+            VALUES (?, ?, datetime('now', '+7 days'), ?, ?)
+        `).bind(sessionToken, user.id, userIP, userAgent).run();
 
         const res = NextResponse.json({ success: true });
 
