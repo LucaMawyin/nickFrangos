@@ -39,12 +39,13 @@ export async function POST(request : Request){
                 { status: 401 }
             );
         }
-
         const sessionToken = crypto.randomUUID();
         const userIP =
+            request.headers.get("cf-connecting-ip") ||
             request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
             request.headers.get("x-real-ip") ||
             "unknown";
+
         const userAgent = request.headers.get("user-agent") || "unknown";
 
         await db.prepare(`
