@@ -12,6 +12,7 @@ export default function DashboardClient(props : {session : Session }){
                 disableHover={true}
                 className="lg:max-w-[40vw] max-w-full"
             >
+                <h1 className="text-[1.5em]">Profile Settings</h1>
             </Tile>
         </div>
     );
