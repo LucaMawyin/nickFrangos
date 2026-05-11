@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { getDB } from "@/lib/db";
+import { Session } from "@/lib/types";
+
 
 export async function validateSession() {
     const cookieStore = await cookies();
@@ -12,7 +14,7 @@ export async function validateSession() {
 
     const session = await db.prepare(`
         SELECT * FROM sessions WHERE token = ?
-    `).bind(token).first();
+    `).bind(token).first<Session>();
 
     if (!session) return null;
 

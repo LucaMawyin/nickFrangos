@@ -1,25 +1,8 @@
-import { cookies } from "next/headers";
-import { getDB } from "@/lib/db";
-import { redirect } from "next/navigation";
+import { requireSession } from "@/lib/auth";
 import DashboardClient from "./DashboardClient";
 
-export default async function LoginPage() {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("session")?.value;
+export default async function DashboardPage() {
+    const session = await requireSession();
 
-    if (!token){
-      redirect("/login");
-    }
-
-    const db = await getDB();
-
-    const session = await db.prepare(`
-        SELECT * FROM sessions WHERE token = ?
-    `).bind(token).first();
-    
-    if (!session){
-      redirect("/login");
-    }
-
-    return <DashboardClient />;
+    return <DashboardClient session={session} />;
 }

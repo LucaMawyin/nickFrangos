@@ -69,6 +69,7 @@ export default function Login(props : {isLoggedIn : boolean}){
             className="md:max-w-[30vw] max-w-full"
             >
                 <form 
+                    autoComplete="on"
                     onSubmit={handleSubmit}
                     className="
                         w-full
@@ -82,6 +83,7 @@ export default function Login(props : {isLoggedIn : boolean}){
                         id="email" 
                         type="text" 
                         name="email" 
+                        autoComplete="email" 
                         onChange={(e) => setEmail(e.target.value)}
                         required
                     />
@@ -92,6 +94,7 @@ export default function Login(props : {isLoggedIn : boolean}){
                             id="password"
                             type={showPassword ? "text" : "password"}
                             name="password"
+                            autoComplete="email"
                             className="flex-1"
                             onChange={(e) => setPassword(e.target.value)}
                             required

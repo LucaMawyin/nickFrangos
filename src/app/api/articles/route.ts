@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { getDB } from "@/lib/db";
-import { Article } from "@/lib/types";
 import { cookies } from "next/headers";
 
 // Fetching articles
