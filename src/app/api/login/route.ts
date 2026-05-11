@@ -39,14 +39,15 @@ export async function POST(request : Request){
                 { status: 401 }
             );
         }
+        console.log(Object.fromEntries(request.headers.entries()));
         const sessionToken = crypto.randomUUID();
         const userIP =
-            request.headers.get("cf-connecting-ip") ||
+            request.headers.get('CF-Connecting-IP') ||
             request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
             request.headers.get("x-real-ip") ||
             "unknown";
 
-        const userAgent = request.headers.get("user-agent") || "unknown";
+        const userAgent = request.headers.get("User-Agent") || "unknown";
 
         await db.prepare(`
             INSERT INTO sessions (token, user_id, expires_at, ip_address, user_agent)
