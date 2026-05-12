@@ -1,18 +1,185 @@
-import Tile from "@/components/Tile";
-import { Session } from "@/lib/types";
+"use client";
 
-export default function DashboardClient(props : {session : Session }){
+import Button from "@/components/Button";
+import Tile from "@/components/Tile";
+import { ChangePasswordResponse, User } from "@/lib/types";
+import { useState } from "react";
+
+export default function DashboardClient(props : {user : User}){
+
+    // Passwords
+    const [showPassword, setShowPassword] = useState(false);
+    const [currentPassword, setCurrentPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+
+    // Success / error
+    const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState<string | null>(null);
+
+    async function handlePasswordChange(
+        e: React.FormEvent
+    ){
+        e.preventDefault();
+
+        setError(null);
+        setSuccess(null);
+
+        // Simple password check
+        if (newPassword !== confirmPassword){
+            setError("Passwords do not match");
+            return;
+        }
+
+        // Changing password
+        const response = await fetch("/api/change-password", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                currentPassword,
+                newPassword,
+            }),
+        });
+
+        const data = await response.json() as ChangePasswordResponse;
+
+        if (response.ok){
+            setSuccess("Password updated");
+            setCurrentPassword("");
+            setNewPassword("");
+            setConfirmPassword("");
+        } else {
+            setError(data.error || "Failed to update password");
+        }
+    }
+
     return (
         <div className="
-        min-h-[50vh]
+        min-h-[90vh]
         flex justify-center items-center"
         >
             <Tile 
                 title="Dashboard"
                 disableHover={true}
-                className="lg:max-w-[40vw] max-w-full"
+                className="lg:max-w-[40vw] max-w-full gap-4"
             >
                 <h1 className="text-[1.5em]">Profile Settings</h1>
+
+                <div className="space-y-4">
+                    <div className="flex flex-col">
+                        <span className="text-gray-500">First Name</span>
+                        <span>
+                            {props.user.firstName}
+                        </span>
+                    </div>
+
+                    <div className="flex flex-col">
+                        <span className=" text-gray-500">Last Name</span>
+                        <span>
+                            {props.user.lastName}
+                        </span>
+                    </div>
+
+                    <div className="flex flex-col gap-1">
+                        <span className="text-gray-500">
+                            Email
+                        </span>
+                        <span>
+                            {props.user.email}
+                        </span>
+                    </div>
+                </div>
+
+                <div className="border-t pt-6 space-y-4">
+                        <h2 className="text-lg">
+                            Change Password
+                        </h2>
+
+                        <div className="flex flex-col gap-1">
+                            <label
+                                htmlFor="current-password"
+                                className="text-gray-500"
+                            >
+                                Current Password
+                            </label>
+                            <div className="flex gap-2 w-full">
+                                <input
+                                    id="current-password"
+                                    type={showPassword ? "text" : "password"}
+                                    name="password"
+                                    className="flex-1"
+                                    value={currentPassword}
+                                    onChange={(e) => setCurrentPassword(e.target.value)}
+                                    required
+                                />
+
+                                <button
+                                    type="button"
+                                    className="flex-0 hover:cursor-pointer"
+                                    onClick={() => setShowPassword((p) => !p)}
+                                >
+                                    {showPassword ? "Hide" : "Show"}
+                                </button>
+                            </div>
+                            <label
+                                htmlFor="new-password"
+                                className="text-gray-500"
+                            >
+                                New Password
+                            </label>
+                            <div className="flex gap-2 w-full">
+                                <input
+                                    id="new-password"
+                                    type={showPassword ? "text" : "password"}
+                                    name="password"
+                                    className="flex-1"
+                                    value={newPassword}
+                                    onChange={(e) => setNewPassword(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <label
+                                htmlFor="confirm-new-password"
+                                className="text-gray-500"
+                            >
+                                Confirm New Password
+                            </label>
+                            <div className="flex gap-2 w-full">
+                                <input
+                                    id="confirm-new-password"
+                                    type={showPassword ? "text" : "password"}
+                                    name="password"
+                                    className="flex-1"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        {error && (
+                            <p className="text-red-500 text-sm text-center">
+                                {error}
+                            </p>
+                        )}
+
+                        {success && (
+                            <p className="text-green-500 text-sm text-center">
+                                {success}
+                            </p>
+                        )}
+
+                        <Button 
+                            text="Save Changes" 
+                            type="submit"
+                            className="self-center"
+                            onClick={handlePasswordChange}
+                        />
+                    </div>
+
+                
             </Tile>
         </div>
     );

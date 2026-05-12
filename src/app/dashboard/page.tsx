@@ -1,8 +1,15 @@
 import { requireSession } from "@/lib/auth";
+import { getUserById } from "@/lib/user";
 import DashboardClient from "./DashboardClient";
 
 export default async function DashboardPage() {
     const session = await requireSession();
 
-    return <DashboardClient session={session} />;
+    const user = await getUserById(session.user_id);
+
+    if (user){
+        return <DashboardClient user={user}/>;
+    }
+
+    return <p>User not found</p>
 }

@@ -8,6 +8,9 @@ export type User = {
   id: number;
   email: string;
   password: string;
+  firstName : string;
+  lastName : string;
+  createdAt : string; 
 };
 
 export type LoginBody = {
@@ -15,7 +18,17 @@ export type LoginBody = {
   password: string;
 };
 
+export type ChangePasswordBody = {
+  currentPassword: string;
+  newPassword: string;
+};
+
+// Same structure different names for transparency
 export type LoginResponse =
+  | { success: true ; error : "" }
+  | { success: false; error: string };
+
+export type ChangePasswordResponse =
   | { success: true ; error : "" }
   | { success: false; error: string };
 
@@ -25,7 +38,7 @@ export type Article = {
   title : string;
   content : string;
   image : Buffer | null;
-}
+};
 
 export type Session = {
   id: number;

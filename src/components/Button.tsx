@@ -6,13 +6,11 @@ export default function Button(props : {
     variant?: "primary" | "secondary";
     children?:React.ReactNode;
     className?:string;
-    onClick?: ()=>void; 
+    onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }){
 
-    function clickEvent() {
-        if (props.onClick) {
-            props.onClick();
-        }
+    function clickEvent(e: React.MouseEvent<HTMLButtonElement>) {
+        props.onClick?.(e);
     }
 
     const base = "w-fit py-4 px-8 rounded-lg transition duration-(--transition-time) cursor-pointer";
