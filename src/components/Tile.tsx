@@ -31,7 +31,10 @@ export default function Tile(props : {
                 {props.title}
             </h1>
 
-            {props.children}
+            <div className="mt-auto flex flex-col">
+                {props.children}
+            </div>
+            
             
         </div>
     );
