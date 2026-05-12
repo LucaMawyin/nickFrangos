@@ -136,11 +136,12 @@ export default function CreateClient(){
               className="hidden"
             />            
             <Button text="Select Image" variant="secondary" onClick={() => inputRef.current?.click()} />
+            {preview && (
+              <img src={preview} alt="Preview" />
+            )}
           </div>
           
-          {preview && (
-            <img src={preview} alt="Preview" />
-          )}
+
           {error && (
             <p className="text-red-500 text-sm mt-2">
               {error}
