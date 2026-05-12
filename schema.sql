@@ -4,6 +4,7 @@ CREATE TABLE articles (
     slug TEXT NOT NULL UNIQUE,
     content TEXT NOT NULL,
     image BLOB,
+    image_type TEXT,
     is_published BOOLEAN DEFAULT 1,
     is_draft BOOLEAN DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,

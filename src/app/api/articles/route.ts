@@ -15,6 +15,7 @@ export async function GET() {
     image: a.image
       ? Buffer.from(a.image).toString("base64")
       : null,
+    imageType: a.image_type || null,
   }));
 
   return Response.json({ articles });
@@ -36,12 +37,15 @@ export async function POST(req: Request) {
     const formData = await req.formData();
     const title = formData.get("title") as string;
     const content = formData.get("content") as string;
-    const file = formData.get("image") as File | null;
+    const image = formData.get("image") as File | null;
+    const imageType =
+      (formData.get("imageType") as string) ||
+      (image ? image.type : null);
 
     let imageBuffer: Buffer | null = null;
 
-    if (file){
-      const arrayBuffer = await file.arrayBuffer();
+    if (image){
+      const arrayBuffer = await image.arrayBuffer();
       imageBuffer = Buffer.from(arrayBuffer);
     }
 
@@ -64,8 +68,8 @@ export async function POST(req: Request) {
     }
 
     await db
-      .prepare("INSERT INTO articles (title, content, image, slug) VALUES (?, ?, ?, ?)")
-      .bind(title, content, imageBuffer, slug)
+      .prepare("INSERT INTO articles (title, content, image, image_type, slug) VALUES (?, ?, ?, ?, ?)")
+      .bind(title, content, imageBuffer, imageType?.trim() || null, slug)
       .run();
 
     return NextResponse.json({ success: true });

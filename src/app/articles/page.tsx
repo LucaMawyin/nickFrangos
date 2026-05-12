@@ -1,14 +1,7 @@
 import { headers } from "next/headers";
 import Tile from "@/components/Tile";
-
-
-type Article = {
-    id: number;
-    title: string;
-    content: string;
-    created_at: string;
-};
-
+import Link from "next/link";
+import { Article as ArticleType } from "@/lib/types";
 
 export default async function Article(){
     
@@ -22,7 +15,7 @@ export default async function Article(){
         { cache: "no-store" }
     );
 
-    const data: {articles? : Article[]} = await response.json();
+    const data: {articles? : ArticleType[]} = await response.json();
 
     const articles = data.articles ?? [];
 
@@ -41,22 +34,32 @@ export default async function Article(){
                 <h1>Failed to load articles</h1>
             ) : (
                 articles.map((article) => (
-                    <Tile 
-                        key = {article.id}
-                        title={article.title}
-                        className="max-w-full min-w-0 h-full w-full"
-                        titleClassName="text-[clamp(1.25rem,2.5vw,2.25rem)]"
-                    >
-                        <div className="p-4">
-                            <p>
-                                {new Date(article.created_at).toLocaleDateString(
-                                    "en-US", 
-                                    {year : "numeric", month:"long", day:"numeric"}
-                                )}
-                            </p>
-                        </div>
+                    <Link key={article.id} href={`/articles/read/${article.slug}`}>
+                        <Tile 
+                            key = {article.id}
+                            title={article.title}
+                            className="max-w-full min-w-0 h-full w-full p-[5%]"
+                            titleClassName="text-[clamp(2rem,2.5vw,2.25rem)]"
+                        >
+                            {article.image_type && (
+                                <img
+                                    src={`/api/articles/image/${article.id}`}
+                                    alt={article.title}
+                                    className="w-full mt-4"
+                                />
+                            )}
+                            <div className="p-4">
+                                <p>
+                                    {new Date(article.created_at).toLocaleDateString(
+                                        "en-US", 
+                                        {year : "numeric", month:"long", day:"numeric"}
+                                    )}
+                                </p>
+                            </div>
 
-                    </Tile>
+                        </Tile>
+                    </Link>
+
                 ))
             )}
             

@@ -38,6 +38,7 @@ export default function CreateClient(){
 
     if (imageFile) { 
       formData.append("image", imageFile);
+      formData.append("imageType", imageFile.type);
     }
 
     const response = await fetch("/api/articles", {

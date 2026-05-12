@@ -38,6 +38,9 @@ export type Article = {
   title : string;
   content : string;
   image : Buffer | null;
+  image_type : string;
+  slug : string;
+  created_at: string;
 };
 
 export type Session = {
