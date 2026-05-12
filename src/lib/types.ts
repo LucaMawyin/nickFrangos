@@ -43,6 +43,10 @@ export type Article = {
   created_at: string;
 };
 
+export type ArticleResponse = {
+  articles : Article[]
+};
+
 export type Session = {
   id: number;
   user_id: number;

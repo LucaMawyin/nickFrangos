@@ -1,24 +1,35 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getDB } from "@/lib/db";
 import { cookies } from "next/headers";
 
 // Fetching articles
-export async function GET() {
+export async function GET(request: NextRequest) {
   const db = await getDB();
+  const searchParams = request.nextUrl.searchParams;
+  
+  // Limit to 8 articles in one query
+  const limit = Number(searchParams.get("limit")) || 8;
+  const offset = Number(searchParams.get("offset")) || 0;
 
-  const { results } = await db
-    .prepare("SELECT * FROM articles")
+
+    const { results } = await db
+    .prepare(`
+        SELECT
+            id,
+            title,
+            slug,
+            created_at,
+            image_type
+        FROM articles
+        ORDER BY created_at DESC
+        LIMIT ? OFFSET ?
+    `)
+    .bind(limit, offset)
     .all();
 
-  const articles = results.map((a: any) => ({
-    ...a,
-    image: a.image
-      ? Buffer.from(a.image).toString("base64")
-      : null,
-    imageType: a.image_type || null,
-  }));
-
-  return Response.json({ articles });
+    return NextResponse.json({
+        articles: results
+    });
 }
 
 // POST for create-article 
