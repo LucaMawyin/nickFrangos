@@ -16,6 +16,7 @@ export default function DashboardClient(props : {user : User}){
     // Success / error
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
+    const [visible, setVisible] = useState(true);
 
     async function handlePasswordChange(
         e: React.FormEvent
@@ -50,8 +51,18 @@ export default function DashboardClient(props : {user : User}){
             setCurrentPassword("");
             setNewPassword("");
             setConfirmPassword("");
+            setVisible(true);
+            setTimeout(() => {
+                setVisible(false);
+                setTimeout(() => setSuccess(null), 300);
+            }, 3000);
         } else {
             setError(data.error || "Failed to update password");
+            setVisible(true);
+                setTimeout(() => {
+                setVisible(false);
+                setTimeout(() => setError(null), 300);
+            }, 3000);
         }
     }
 
@@ -159,17 +170,21 @@ export default function DashboardClient(props : {user : User}){
                             </div>
                         </div>
 
-                        {error && (
-                            <p className="text-red-500 text-sm text-center">
-                                {error}
-                            </p>
-                        )}
-
-                        {success && (
-                            <p className="text-green-500 text-sm text-center">
-                                {success}
-                            </p>
-                        )}
+                        <p   
+                            className={`
+                                text-sm text-center min-h-5
+                                transition-opacity duration-300
+                                ${visible ? "opacity-100" : "opacity-0"}
+                            `}
+                        >
+                            {error ? (
+                                <span className="text-red-500">{error}</span>
+                            ) : success ? (
+                                <span className="text-green-500">{success}</span>
+                            ):(
+                                ""
+                            )}
+                        </p>
 
                         <Button 
                             text="Save Changes" 
