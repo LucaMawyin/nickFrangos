@@ -3,6 +3,7 @@ CREATE TABLE articles (
     title TEXT NOT NULL,
     slug TEXT NOT NULL UNIQUE,
     content TEXT NOT NULL,
+    image BLOB,
     is_published BOOLEAN DEFAULT 1,
     is_draft BOOLEAN DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
