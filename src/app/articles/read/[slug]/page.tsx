@@ -1,7 +1,13 @@
 import { Article } from "@/lib/types";
 import { getDB } from "@/lib/db";
+import { deleteArticle } from "./actions";
+import Button from "@/components/Button";
+import { validateSession } from "@/lib/auth";
+import DeleteButton from "@/components/DeleteButton";
 
 export default async function ArticlePage({ params }: any){
+
+    const session = await validateSession();
 
     const db = await getDB();
     const article = await db
@@ -23,7 +29,18 @@ export default async function ArticlePage({ params }: any){
                 />
             )}
 
-            <h1 className="text-3xl font-bold">{article.title}</h1>
+            <div className="flex items-start justify-between gap-4">
+                <h1 className="text-3xl font-bold">{article.title}</h1>
+                {session && (
+                    <DeleteButton 
+                        action={async () => {
+                            "use server";
+                            await deleteArticle(article.id);
+                        }}
+                    />
+                )}
+
+            </div>
 
             <p className="text-sm text-gray-500 mt-2">
                 {new Date(article.created_at).toLocaleDateString(

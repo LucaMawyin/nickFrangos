@@ -18,6 +18,8 @@ export default function CreateClient(){
   const [preview, setPreview] = useState<string | null>(null);
   const [ imageFile, setImageFile ] = useState<File | null>(null);
 
+  const [error, setError] = useState<string | null>(null);
+
 
   // Handling thumbnail for post
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,6 +32,11 @@ export default function CreateClient(){
 
   async function handleSubmit(e : React.FormEvent){
     e.preventDefault();
+
+    if (!imageFile) {
+      setError("Please select an image.");
+      return;
+    }
 
     // Data stored in one object
     const formData = new FormData();
@@ -48,6 +55,7 @@ export default function CreateClient(){
 
     // Successful publish reroutes to articles
     if (response.ok) {
+      setError(null);
       router.push("/articles");
     } 
 
@@ -59,7 +67,7 @@ export default function CreateClient(){
     // Default
     else {
       const data = await response.json() as LoginResponse;
-      alert(data.error || "Failed to create article");
+      setError(data.error || "Failed to create article");
     }
 
   }
@@ -99,6 +107,7 @@ export default function CreateClient(){
             name="title" 
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Write an interesting title" 
+            required
           />
 
           <label htmlFor="content">Content</label>
@@ -107,7 +116,9 @@ export default function CreateClient(){
             className="min-h-75"
             name="content" 
             onChange={(e) => setContent(e.target.value)}
-            placeholder="Start writing your article" />
+            placeholder="Start writing your article" 
+            required
+          />
           
           
           <div
@@ -129,6 +140,11 @@ export default function CreateClient(){
           
           {preview && (
             <img src={preview} alt="Preview" />
+          )}
+          {error && (
+            <p className="text-red-500 text-sm mt-2">
+              {error}
+            </p>
           )}
           <div className="flex 
             flex-col 

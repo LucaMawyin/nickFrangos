@@ -7,6 +7,7 @@ export default function Button(props : {
     children?:React.ReactNode;
     className?:string;
     onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+    disabled?: boolean;
 }){
 
     function clickEvent(e: React.MouseEvent<HTMLButtonElement>) {
@@ -22,11 +23,16 @@ export default function Button(props : {
         "bg-gray-200 text-black hover:bg-gray-300 hover:shadow-md",
     };
 
+    const disabledStyle = props.disabled
+    ? "opacity-50 cursor-not-allowed"
+    : "";
+
     return(
         <button 
             type={props.type ?? "button"}
             onClick={clickEvent} 
-            className={`${base} ${styles[props.variant ?? "primary"]} ${props.className ?? ""}`}>
+            disabled={props.disabled}
+            className={`${base} ${styles[props.variant ?? "primary"]} ${props.className ?? ""} ${disabledStyle}`}>
                 
             {props.text}
             {props.children}
