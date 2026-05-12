@@ -39,7 +39,7 @@ export async function POST(request : Request){
                 { status: 401 }
             );
         }
-        console.log(Object.fromEntries(request.headers.entries()));
+
         const sessionToken = crypto.randomUUID();
         const userIP =
             request.headers.get('CF-Connecting-IP') ||
