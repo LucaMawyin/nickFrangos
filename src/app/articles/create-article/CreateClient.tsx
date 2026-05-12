@@ -63,6 +63,17 @@ export default function CreateClient(){
 
   }
 
+  // Image drop
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+
+    const file = e.dataTransfer.files?.[0];
+    if (file && file.type.startsWith("image/")) {
+      setImageFile(file);
+      setPreview(URL.createObjectURL(file));
+    }
+  };
+
   return (
     <div 
       className="flex justify-center items-center min-h-[90vh]"
@@ -97,16 +108,24 @@ export default function CreateClient(){
             onChange={(e) => setContent(e.target.value)}
             placeholder="Start writing your article" />
           
-          <label htmlFor="thumbnail">Thumbnail</label>
-          <input 
-            id="thumbnail"
-            type="file" 
-            accept="image/*" 
-            onChange={handleFileChange} 
-            ref={inputRef}
-            className="hidden"
-          />
-          <Button text="Select Image" variant="secondary" onClick={() => inputRef.current?.click()} />
+          
+          <div
+            onDragOver={(e) => {e.preventDefault()}}
+            onDrop={handleDrop}
+            className="flex flex-col gap-3"
+          >
+            <label htmlFor="thumbnail">Drag & drop an image here, or click to select</label>
+            <input 
+              id="thumbnail"
+              type="file" 
+              accept="image/*" 
+              onChange={handleFileChange} 
+              ref={inputRef}
+              className="hidden"
+            />            
+            <Button text="Select Image" variant="secondary" onClick={() => inputRef.current?.click()} />
+          </div>
+          
           {preview && (
             <img src={preview} alt="Preview" />
           )}

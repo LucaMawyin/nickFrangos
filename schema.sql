@@ -7,7 +7,7 @@ CREATE TABLE articles (
     is_draft BOOLEAN DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    published_at DATETIME
+    published_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 INSERT INTO articles (title, slug, content, is_published, published_at)
 VALUES (
