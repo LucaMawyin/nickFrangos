@@ -1,11 +1,7 @@
 import { Article } from "@/lib/types";
 import { getDB } from "@/lib/db";
 
-export default async function ArticlePage({
-    params,
-}: {
-    params: { slug: string };
-}) {
+export default async function ArticlePage({ params }: any){
 
     const db = await getDB();
     const article = await db

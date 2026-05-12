@@ -1,7 +1,9 @@
 import { getDB } from "@/lib/db";
 
-export async function GET(request: Request, context: any) {
-    const { params } = context;
+export async function GET(
+    request: Request,
+    { params }: { params: { id: string } }
+) {
     const db = await getDB();
 
     const row = await db
