@@ -30,7 +30,7 @@ export default function DeleteButton({ action }: { action: () => void }) {
     return (
         <>
             <Button
-                text="Delete"
+                text="Delete Article"
                 type="button"
                 className="bg-red-600 hover:bg-red-700"
                 onClick={() => setOpen(true)}

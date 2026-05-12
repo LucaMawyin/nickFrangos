@@ -29,8 +29,19 @@ export default async function ArticlePage({ params }: any){
                 />
             )}
 
-            <div className="flex items-start justify-between gap-4">
-                <h1 className="text-3xl font-bold">{article.title}</h1>
+            <h1 className="text-3xl font-bold">{article.title}</h1>
+            <p className="text-sm text-gray-500 mt-2">
+                {new Date(article.created_at).toLocaleDateString(
+                    "en-US",
+                    { year: "numeric", month: "long", day: "numeric" }
+                )}
+            </p>
+
+            <div className="mt-6 whitespace-pre-wrap">
+                {article.content}
+            </div>
+
+            <div className="flex justify-center mt-10">
                 {session && (
                     <DeleteButton 
                         action={async () => {
@@ -39,18 +50,8 @@ export default async function ArticlePage({ params }: any){
                         }}
                     />
                 )}
-
             </div>
 
-            <p className="text-sm text-gray-500 mt-2">
-                {new Date(article.created_at).toLocaleDateString(
-                    "en-US",
-                    { year: "numeric", month: "long", day: "numeric" }
-                )}
-            </p>
-            <div className="mt-6 whitespace-pre-wrap">
-                {article.content}
-            </div>
         </div>
     );
 }
