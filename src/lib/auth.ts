@@ -26,8 +26,6 @@ export async function validateSession() {
             WHERE token = ?
         `).bind(token).run()
 
-        cookieStore.delete("session");
-
         return null;
     }
 

@@ -8,7 +8,7 @@ import { Page } from "@/lib/types";
 export default function NavBarClient(
     props : {
         pageList : Page[];
-        session : string | null;
+        isLoggedIn : boolean;
 }){
 
     const [ open, setOpen ] = useState(false);
@@ -41,8 +41,8 @@ export default function NavBarClient(
                 <NavLink title="Nicholas" link="/" />
                 <nav className="flex gap-6">
                     {props.pageList.map((page) => (
-                        (!page.requireLogin || props.session) && 
-                        !(page.href === "login" && props.session) && 
+                        (!page.requireLogin || props.isLoggedIn) && 
+                        !(page.href === "login" && props.isLoggedIn) && 
                         (
                             <NavLink 
                                 key={page.href}
@@ -116,8 +116,8 @@ export default function NavBarClient(
 
 
                 {props.pageList.map((page) => (
-                    (!page.requireLogin || props.session) && 
-                    !(page.href === "login" && props.session) && 
+                    (!page.requireLogin || props.isLoggedIn) && 
+                    !(page.href === "login" && props.isLoggedIn) && 
                     (
                         <div
                             key={page.href}

@@ -1,7 +1,7 @@
-import { cookies } from "next/headers";
 
 import NavBarClient from "./NavBarClient";
 import { Page } from "@/lib/types";
+import { validateSession } from "@/lib/auth";
 
 type Props = {
     pageList: Page[];
@@ -9,15 +9,12 @@ type Props = {
 
 export default async function NavBar( props : Props ) {
 
-    const cookieStore = await cookies();
-
-    const session =
-        cookieStore.get("session")?.value ?? null;
+    const session = await validateSession();
 
     return (
         <NavBarClient
             pageList={props.pageList}
-            session={session}
+            isLoggedIn={!!session}
         />
     );
 }
