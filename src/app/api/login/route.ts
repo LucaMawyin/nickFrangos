@@ -49,10 +49,12 @@ export async function POST(request : Request){
 
         const userAgent = request.headers.get("User-Agent") || "unknown";
 
+        const geo = await getGeoFromIp(userIP);
+
         await db.prepare(`
-            INSERT INTO sessions (token, user_id, expires_at, ip_address, user_agent)
-            VALUES (?, ?, datetime('now', '+1 days'), ?, ?)
-        `).bind(sessionToken, user.id, userIP, userAgent).run();
+            INSERT INTO sessions (token, user_id, expires_at, ip_address, geo, user_agent)
+            VALUES (?, ?, datetime('now', '+1 days'), ?, ?, ?)
+        `).bind(sessionToken, user.id, userIP, JSON.stringify(geo), userAgent).run();
 
         const res = NextResponse.json({ success: true });
 
@@ -72,5 +74,19 @@ export async function POST(request : Request){
             { error: "Server Error" },
             { status: 500 }
         );
+    }
+}
+
+async function getGeoFromIp(ip: string) {
+    const token = process.env.IPINFO_TOKEN;
+
+    if (!token || ip === "unknown") return null;
+
+    try {
+        const res = await fetch(`https://ipinfo.io/${ip}?token=${token}`);
+        if (!res.ok) return null;
+        return await res.json();
+    } catch (err) {
+        return err;
     }
 }

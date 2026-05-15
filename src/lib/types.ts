@@ -57,5 +57,6 @@ export type Session = {
 
 export interface Env {
   nicholas_db: D1Database;
+  IPINFO_TOKEN : string;
 };
 
