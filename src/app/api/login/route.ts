@@ -68,12 +68,13 @@ export async function POST(request : Request){
 
         const res = NextResponse.json({ success: true });
 
+        // Cookie only valid for 1 day
         res.cookies.set("session", sessionToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "lax",
             path: "/",
-            maxAge: 60 * 60 * 24 * 7,
+            maxAge: 60 * 60 * 24,
         });
 
         try {
@@ -121,7 +122,7 @@ async function sendLoginEmail(
     await resend.emails.send({
         from: "Nicholas Frangos <security@nicholasfrangos.com>",
         to: email,
-        subject: "New Login Detected",
+        subject: "New Login Attempt",
         html: `
             <h2>New Login Alert</h2>
             <p><strong>IP:</strong> ${ip}</p>

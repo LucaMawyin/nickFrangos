@@ -11,6 +11,7 @@ export type User = {
   firstName : string;
   lastName : string;
   createdAt : string; 
+  emailVerified : boolean;
 };
 
 export type LoginBody = {
