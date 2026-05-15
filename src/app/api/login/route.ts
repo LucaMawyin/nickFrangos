@@ -84,12 +84,12 @@ export async function POST(request : Request){
 }
 
 async function getGeoFromIp(ip: string) {
-    const token = process.env.IPINFO_TOKEN;
+    const token = process.env.IPIFY_TOKEN;
 
     if (!token || ip === "unknown") return null;
 
     try {
-        const res = await fetch(`https://ipinfo.io/${ip}?token=${token}`);
+        const res = await fetch(`https://geo.ipify.org/api/v2/country,city,vpn?apiKey=${token}&ipAddress=${ip}`);
         if (!res.ok) return null;
         return await res.json();
     } catch (err) {
