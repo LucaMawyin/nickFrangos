@@ -128,7 +128,7 @@ async function sendLoginEmail(
             <p><strong>Device:</strong> ${userAgent}</p>
             <p><strong>Country:</strong> ${geo?.location?.country || "Unknown"}</p>
             <p><strong>Region:</strong> ${geo?.location?.region || "Unknown"}</p>
-            <p><strong>Region:</strong> ${geo?.location?.city || "Unknown"}</p>
+            <p><strong>City:</strong> ${geo?.location?.city || "Unknown"}</p>
             <p>If this wasn't you, please reset your password immediately.</p>
         `,
     });
