@@ -18,6 +18,19 @@ export async function validateSession() {
 
     if (!session) return null;
 
+    const expiresAt = new Date(session.expires_at);
+
+    if (expiresAt < new Date()){
+        await db.prepare(`
+            DELETE FROM sessions
+            WHERE token = ?
+        `).bind(token).run()
+
+        cookieStore.delete("session");
+
+        return null;
+    }
+
     return session;
 }
 
