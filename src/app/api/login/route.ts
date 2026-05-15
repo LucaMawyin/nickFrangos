@@ -47,6 +47,12 @@ export async function POST(request : Request){
             request.headers.get("x-real-ip") ||
             "unknown";
 
+        console.log({
+            cf: request.headers.get("cf-connecting-ip"),
+            xff: request.headers.get("x-forwarded-for"),
+            ua: request.headers.get("user-agent"),
+        });
+
         const userAgent = request.headers.get("User-Agent") || "unknown";
 
         const geo = await getGeoFromIp(userIP);
