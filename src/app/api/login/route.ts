@@ -51,7 +51,7 @@ export async function POST(request : Request){
 
         await db.prepare(`
             INSERT INTO sessions (token, user_id, expires_at, ip_address, user_agent)
-            VALUES (?, ?, datetime('now', '+7 days'), ?, ?)
+            VALUES (?, ?, datetime('now', '+1 days'), ?, ?)
         `).bind(sessionToken, user.id, userIP, userAgent).run();
 
         const res = NextResponse.json({ success: true });

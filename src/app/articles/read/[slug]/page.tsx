@@ -1,7 +1,6 @@
 import { Article } from "@/lib/types";
 import { getDB } from "@/lib/db";
 import { deleteArticle } from "./actions";
-import Button from "@/components/Button";
 import { validateSession } from "@/lib/auth";
 import DeleteButton from "@/components/DeleteButton";
 
