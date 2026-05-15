@@ -119,15 +119,16 @@ async function sendLoginEmail(
     const resend = new Resend(token);
 
     await resend.emails.send({
-        from: "NicholasFrangos.com <onboarding@resend.dev>",
+        from: "Nicholas Frangos <security@nicholasfrangos.com>",
         to: email,
-        subject: "New login detected",
+        subject: "New Login Detected",
         html: `
             <h2>New Login Alert</h2>
             <p><strong>IP:</strong> ${ip}</p>
             <p><strong>Device:</strong> ${userAgent}</p>
             <p><strong>Country:</strong> ${geo?.location?.country || "Unknown"}</p>
             <p><strong>Region:</strong> ${geo?.location?.region || "Unknown"}</p>
+            <p><strong>Region:</strong> ${geo?.location?.city || "Unknown"}</p>
             <p>If this wasn't you, please reset your password immediately.</p>
         `,
     });
