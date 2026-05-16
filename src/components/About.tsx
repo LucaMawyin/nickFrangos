@@ -14,9 +14,8 @@ export default function About(){
                     alt="Headshot"
                     className="max-w-[75%] p-[5%] self-center"/>
                 <div className="flex flex-col flex-1 p-[5%] justify-end">
-                    <p>Name: Nicholas</p>
-                    <p>Interests:</p>
-                    <p>Favourite Quote:</p>
+                    <p><b>Name:</b> Nicholas</p>
+                    <p><b>Interests:</b> Sports</p>
                 </div>
             </Tile>
 

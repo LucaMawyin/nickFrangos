@@ -6,10 +6,12 @@ import Title from "@/components/Title"
 import Button from "@/components/Button"
 import Icon from "@/components/Icon";
 import About from "@/components/About";
+import { YouTubeResponse } from "@/lib/types";
 
 export default function Home() {
 
   const [loaded, setLoaded] = useState(false);
+  const [videoId, setVideoId] = useState<string | null>(null);
 
   useEffect(() => {
     requestAnimationFrame(() => {
@@ -18,26 +20,44 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const aboutSection = document.getElementById("about");
+      const sections = Array.from(document.querySelectorAll<HTMLElement>("section[id]"));
 
-    if (!aboutSection) return;
+      if (!sections.length) return;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          window.history.replaceState(null, "", "#about");
-        } else {
-          window.history.replaceState(null, "", "/");
-        }
-      },
-      {
-        threshold: 0.6,
-      }
-    );
+      const observer = new IntersectionObserver(
+          () => {
+              let bestSection: HTMLElement | null = null;
+              let bestRatio = 0;
 
-    observer.observe(aboutSection);
+              for (const section of sections) {
+                  const rect = section.getBoundingClientRect();
 
-    return () => observer.disconnect();
+                  const height = window.innerHeight;
+                  const visibleHeight =
+                      Math.min(rect.bottom, height) - Math.max(rect.top, 0);
+
+                  const ratio = Math.max(0, visibleHeight / height);
+
+                  if (ratio > bestRatio) {
+                      bestRatio = ratio;
+                      bestSection = section;
+                  }
+              }
+
+              if (bestSection?.id && bestRatio > 0.4) {
+                  window.history.replaceState(null, "", `#${bestSection.id}`);
+              } else {
+                  window.history.replaceState(null, "", "/");
+              }
+          },
+          {
+              threshold: [0, 0.1, 0.5, 1],
+          }
+      );
+
+      sections.forEach((section) => observer.observe(section));
+
+      return () => observer.disconnect();
   }, []);
 
   const links = {
@@ -45,6 +65,19 @@ export default function Home() {
     linkedin: "https://www.linkedin.com/in/nicholas-frangos-4b857432a/",
     email: ""
   }
+
+  useEffect(() => {
+    async function loadVideo() {
+      const res = await fetch("/api/youtube");
+      const data = await res.json() as YouTubeResponse;
+
+      if (data.videoId) {
+        setVideoId(data.videoId);
+      }
+    }
+
+    loadVideo();
+  }, []);
 
   return (
 
@@ -94,8 +127,24 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="about" className="snap-start">
+      <section id="about" className="snap-start bg-gray-50">
         <About />
+      </section>
+
+      <section id="media" className="snap-start flex justify-center items-center min-h-[90vh]">
+        <div className="w-full max-w-4xl p-6">
+          <h2 className="text-center md:text-start text-[3em] font-bold mb-[5%]">Check Out My Latest Video</h2>
+
+          {videoId ? (
+            <iframe
+              className="w-full aspect-video rounded-xl"
+              src={`https://www.youtube.com/embed/${videoId}`}
+              allowFullScreen
+            />
+          ) : (
+            <p>Loading video...</p>
+          )}
+        </div>
       </section>
     </>
 

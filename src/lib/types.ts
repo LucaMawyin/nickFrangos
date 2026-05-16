@@ -60,6 +60,43 @@ export type VerifyLoginBody = {
   code: string;
 };
 
+export type YouTubeResponse = {
+  videoId?: string;
+  error?: string;
+};
+
+export type YouTubeChannelResponse = {
+  items?: {
+    contentDetails?: {
+      relatedPlaylists?: {
+        uploads?: string;
+      };
+    };
+  }[];
+};
+
+export type YouTubePlaylistResponse = {
+  items?: {
+    snippet?: {
+      resourceId?: {
+        videoId?: string;
+      };
+    };
+  }[];
+};
+
+export type YouTubeVideoResponse = {
+    items: {
+        id: string;
+        snippet: {
+            publishedAt: string;
+        };
+        contentDetails: {
+            duration: string;
+        };
+    }[];
+};
+
 export interface Env {
   nicholas_db: D1Database;
   IPINFO_TOKEN : string;
