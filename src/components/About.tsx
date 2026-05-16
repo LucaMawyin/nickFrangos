@@ -23,7 +23,7 @@ export default function About(){
                 <img 
                     src="/images/tmu.png"
                     alt="School Logo"
-                    className=" p-[5%] self-center"
+                    className="max-w-[75%] p-[5%] self-center"
                 />
                 <div className="flex flex-col flex-1 p-[5%] justify-end">
                     <p><b>School:</b> Toronto Metropolitan University</p>
