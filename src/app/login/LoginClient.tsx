@@ -14,6 +14,8 @@ export default function Login(props : {isLoggedIn : boolean}){
 
     const next = searchParams.get("next") || "/";
 
+    const [success, setSuccess] = useState(false);
+
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -32,8 +34,9 @@ export default function Login(props : {isLoggedIn : boolean}){
 
         if (response.ok) {
             setError(null);
-            router.push(next);
-            router.refresh();
+            setSuccess(true);
+            // router.push(next);
+            // router.refresh();
         } else {
             const data = await response.json() as LoginResponse;
             setError(data.error || "Login failed");
@@ -108,6 +111,12 @@ export default function Login(props : {isLoggedIn : boolean}){
                             {showPassword ? "Hide" : "Show"}
                         </button>
                     </div>
+
+                    {success && (
+                        <p className="text-green-500 text-sm text-center">
+                            Please verify with your email
+                        </p>
+                    )}
 
                     {error && (
                         <p className="text-red-500 text-sm text-center">
