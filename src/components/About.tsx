@@ -20,6 +20,11 @@ export default function About(){
             </Tile>
 
             <Tile title="Education">
+                <img 
+                    src="/images/tmu.png"
+                    alt="School Logo"
+                    className=" p-[5%] self-center"
+                />
                 <div className="flex flex-col flex-1 p-[5%] justify-end">
                     <p><b>School:</b> Toronto Metropolitan University</p>
                     <p><b>Major:</b> Sports Media</p>

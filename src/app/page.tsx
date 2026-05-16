@@ -127,7 +127,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="about" className="snap-start bg-gray-50">
+      <section id="about" className="snap-start">
         <About />
       </section>
 
