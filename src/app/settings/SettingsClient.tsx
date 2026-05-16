@@ -5,7 +5,7 @@ import Tile from "@/components/Tile";
 import { ChangePasswordResponse, User } from "@/lib/types";
 import { useState } from "react";
 
-export default function DashboardClient(props : {user : User}){
+export default function SettingsClient(props : {user : User}){
 
     // Passwords
     const [showPassword, setShowPassword] = useState(false);
@@ -72,12 +72,10 @@ export default function DashboardClient(props : {user : User}){
         flex justify-center items-center"
         >
             <Tile 
-                title="Dashboard"
+                title="Profile Settings"
                 disableHover={true}
                 className="lg:max-w-[40vw] max-w-full gap-4"
             >
-                <h1 className="text-[1.5em]">Profile Settings</h1>
-
                 <div className="space-y-4">
                     <div className="flex flex-col">
                         <span className="text-gray-500">First Name</span>
