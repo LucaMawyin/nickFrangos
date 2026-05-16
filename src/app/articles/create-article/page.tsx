@@ -3,7 +3,7 @@ import { getDB } from "@/lib/db";
 import CreateClient from "./CreateClient";
 import { redirect } from "next/navigation";
 
-export default async function LoginPage() {
+export default async function CreatePage() {
     const cookieStore = await cookies();
     const token = cookieStore.get("session")?.value;
 
