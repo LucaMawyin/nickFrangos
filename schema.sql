@@ -114,8 +114,12 @@ CREATE TABLE sessions (
 );
 CREATE TABLE login_verifications (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER,
-    code TEXT,
-    expires_at TEXT,
-    used INTEGER DEFAULT 0
+    user_id INTEGER NOT NULL,
+    token TEXT NOT NULL UNIQUE,
+    expires_at DATETIME NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    ip_address TEXT,
+    geo TEXT,
+    user_agent TEXT,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

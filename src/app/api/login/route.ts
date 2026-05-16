@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
 import { getDB } from "@/lib/db";
 import { User } from "@/lib/types";
 import { LoginBody } from "@/lib/types";
@@ -20,6 +21,7 @@ export async function POST(request : Request){
 
         const db = await getDB();
 
+        // Check if user exists
         const user = ( await db
             .prepare("SELECT * FROM users WHERE email = ?")
             .bind(email)
@@ -33,8 +35,8 @@ export async function POST(request : Request){
             );
         }
 
+        // Password validation
         const isValid = await bcrypt.compare(password, user.password);
- 
         if (!isValid) {
             return NextResponse.json(
                 { error: "Invalid Credentials" },
@@ -42,53 +44,59 @@ export async function POST(request : Request){
             );
         }
 
-        const sessionToken = crypto.randomUUID();
+        // Deleting old verifications under user id
+        await db.prepare(`
+            DELETE FROM login_verifications
+            WHERE user_id = ?
+        `).bind(user.id).run();
+
+        const verificationToken = crypto.randomUUID();
+
         const userIP =
             request.headers.get('CF-Connecting-IP') ||
             request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
             request.headers.get("x-real-ip") ||
             "unknown";
-
-        console.log({
-            cf: request.headers.get("cf-connecting-ip"),
-            xff: request.headers.get("x-forwarded-for"),
-            ua: request.headers.get("user-agent"),
-        });
-
+        
         const userAgent = request.headers.get("User-Agent") || "unknown";
 
-        // Getting user geo info
         const geo = await getGeoFromIp(userIP);
 
-        // Adding to DB
         await db.prepare(`
-            INSERT INTO sessions (token, user_id, expires_at, ip_address, geo, user_agent)
-            VALUES (?, ?, datetime('now', '+1 days'), ?, ?, ?)
-        `).bind(sessionToken, user.id, userIP, JSON.stringify(geo), userAgent).run();
+            INSERT INTO login_verifications
+            (user_id, token, expires_at, ip_address, geo, user_agent)
+            VALUES (?, ?, datetime('now', '+10 minutes'), ?, ?, ?)
+        `)
+        .bind(
+            user.id,
+            verificationToken,
+            userIP,
+            JSON.stringify(geo),
+            userAgent
+        )
+        .run();
 
-        const res = NextResponse.json({ success: true });
+        await sendVerificationEmail(
+            email,
+            verificationToken,
+            userIP,
+            geo,
+            userAgent
+        );
 
-        // Cookie only valid for 1 day
-        res.cookies.set("session", sessionToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-            path: "/",
-            maxAge: 60 * 60 * 24,
+        return NextResponse.json({
+            requiresVerification: true
         });
-
-        try {
-            await sendLoginEmail(email, userIP, geo, userAgent);
-        } catch (e) {
-            console.error("Email failed", e);
-        }
-
-        return res;
     }
 
     catch (err) {
+        console.error("LOGIN ERROR:", err);
+
         return NextResponse.json(
-            { error: "Server Error" },
+            { 
+                error: "Server Error",
+                details: err instanceof Error ? err.message : String(err)
+            },
             { status: 500 }
         );
     }
@@ -131,6 +139,44 @@ async function sendLoginEmail(
             <p><strong>Region:</strong> ${geo?.location?.region || "Unknown"}</p>
             <p><strong>City:</strong> ${geo?.location?.city || "Unknown"}</p>
             <p>If this wasn't you, please reset your password immediately.</p>
+        `,
+    });
+}
+
+async function sendVerificationEmail(
+    email: string,
+    token: string,
+    ip: string,
+    geo: any,
+    userAgent: string
+) {
+    const resend = new Resend(process.env.RESEND_TOKEN);
+
+    const verifyUrl =
+        `${process.env.NEXT_PUBLIC_APP_URL}/verify-login?token=${token}`;
+
+    await resend.emails.send({
+        from: "Nicholas Frangos <security@nicholasfrangos.com>",
+        to: email,
+        subject: "Verify Your Login",
+        html: `
+            <h2>Verify Login Attempt</h2>
+
+            <p>A login attempt was made on your account.</p>
+
+            <p><strong>IP:</strong> ${ip}</p>
+            <p><strong>Device:</strong> ${userAgent}</p>
+            <p><strong>Country:</strong> ${geo?.location?.country || "Unknown"}</p>
+            <p><strong>Region:</strong> ${geo?.location?.region || "Unknown"}</p>
+            <p><strong>City:</strong> ${geo?.location?.city || "Unknown"}</p>
+
+            <p>
+                <a href="${verifyUrl}">
+                    Verify Login
+                </a>
+            </p>
+
+            <p>This link expires in 10 minutes.</p>
         `,
     });
 }

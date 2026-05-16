@@ -33,7 +33,6 @@ export type ChangePasswordResponse =
   | { success: true ; error : "" }
   | { success: false; error: string };
 
-
 export type Article = {
   id: number;
   title : string;
@@ -54,6 +53,10 @@ export type Session = {
   token: string;
   created_at: string;
   expires_at: string;
+};
+
+export type VerifyLoginBody = {
+    token: string;
 };
 
 export interface Env {
