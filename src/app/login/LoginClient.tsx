@@ -14,8 +14,6 @@ export default function Login(props : {isLoggedIn : boolean}){
 
     const next = searchParams.get("next") || "/";
 
-    const [success, setSuccess] = useState(false);
-
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -32,14 +30,30 @@ export default function Login(props : {isLoggedIn : boolean}){
             body: JSON.stringify({email,password}),
         });
 
-        if (response.ok) {
-            setError(null);
-            setSuccess(true);
-            // router.push(next);
-            // router.refresh();
-        } else {
-            const data = await response.json() as LoginResponse;
+        let data : LoginResponse;
+
+        try {
+            data = await response.json();
+        } catch {
+            setError("Server error");
+            return;
+        }
+
+        if (data.status === "verification_required") {
+
+            router.push(
+            `/verify-login?email=${encodeURIComponent(email)}&next=${encodeURIComponent(next)}`
+            );
+            return;
+        } 
+        
+        if (data.status === "error") {
             setError(data.error || "Login failed");
+            return;
+        }
+
+        if (data.status === "success"){
+            router.push(next);
         }
 
     }
@@ -111,12 +125,6 @@ export default function Login(props : {isLoggedIn : boolean}){
                             {showPassword ? "Hide" : "Show"}
                         </button>
                     </div>
-
-                    {success && (
-                        <p className="text-green-500 text-sm text-center">
-                            Please verify with your email
-                        </p>
-                    )}
 
                     {error && (
                         <p className="text-red-500 text-sm text-center">

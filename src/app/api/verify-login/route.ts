@@ -5,9 +5,9 @@ import crypto from "crypto";
 
 export async function POST(request: Request) {
     try {
-        const { token } = await request.json() as VerifyLoginBody;
+        const { code } = await request.json() as VerifyLoginBody;
 
-        if (!token) {
+        if (!code) {
             return NextResponse.json(
                 { error: "Missing token" },
                 { status: 400 }
@@ -21,7 +21,7 @@ export async function POST(request: Request) {
             WHERE token = ?
             AND expires_at > datetime('now')
         `)
-        .bind(token)
+        .bind(code)
         .first();
 
         if (!record) {
@@ -50,7 +50,7 @@ export async function POST(request: Request) {
         await db.prepare(`
             DELETE FROM login_verifications
             WHERE token = ?
-        `).bind(token).run();
+        `).bind(code).run();
 
         const res = NextResponse.json({ success: true });
 

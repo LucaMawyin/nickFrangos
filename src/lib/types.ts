@@ -26,8 +26,9 @@ export type ChangePasswordBody = {
 
 // Same structure different names for transparency
 export type LoginResponse =
-  | { success: true ; error : "" }
-  | { success: false; error: string };
+  | { status: "success" ; error : "" }
+  | { status: "error"; error: string }
+  | { status : "verification_required"; error : "" };
 
 export type ChangePasswordResponse =
   | { success: true ; error : "" }
@@ -56,7 +57,7 @@ export type Session = {
 };
 
 export type VerifyLoginBody = {
-    token: string;
+  code: string;
 };
 
 export interface Env {

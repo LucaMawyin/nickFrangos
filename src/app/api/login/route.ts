@@ -30,8 +30,10 @@ export async function POST(request : Request){
 
         if (!user){
             return NextResponse.json(
-                { error: "Invalid credentials" },
-                { status: 401 }
+                { 
+                    status : "error",
+                    error : "Invalid Credentials"
+                },{ status: 401 }
             );
         }
 
@@ -50,7 +52,9 @@ export async function POST(request : Request){
             WHERE user_id = ?
         `).bind(user.id).run();
 
-        const verificationToken = crypto.randomUUID();
+        const verificationCode = Math.floor(
+            100000 + Math.random() * 900000
+        ).toString();
 
         const userIP =
             request.headers.get('CF-Connecting-IP') ||
@@ -69,7 +73,7 @@ export async function POST(request : Request){
         `)
         .bind(
             user.id,
-            verificationToken,
+            verificationCode,
             userIP,
             JSON.stringify(geo),
             userAgent
@@ -78,14 +82,14 @@ export async function POST(request : Request){
 
         await sendVerificationEmail(
             email,
-            verificationToken,
+            verificationCode,
             userIP,
             geo,
             userAgent
         );
 
         return NextResponse.json({
-            requiresVerification: true
+            status: "verification_required"
         });
     }
 
@@ -116,67 +120,73 @@ async function getGeoFromIp(ip: string) {
     }
 }
 
-async function sendLoginEmail(
-    email: string,
-    ip: string,
-    geo: any,
-    userAgent: string
-) {
-
-    const token = process.env.RESEND_TOKEN
-
-    const resend = new Resend(token);
-
-    await resend.emails.send({
-        from: "Nicholas Frangos <security@nicholasfrangos.com>",
-        to: email,
-        subject: "New Login Attempt",
-        html: `
-            <h2>New Login Alert</h2>
-            <p><strong>IP:</strong> ${ip}</p>
-            <p><strong>Device:</strong> ${userAgent}</p>
-            <p><strong>Country:</strong> ${geo?.location?.country || "Unknown"}</p>
-            <p><strong>Region:</strong> ${geo?.location?.region || "Unknown"}</p>
-            <p><strong>City:</strong> ${geo?.location?.city || "Unknown"}</p>
-            <p>If this wasn't you, please reset your password immediately.</p>
-        `,
-    });
-}
-
 async function sendVerificationEmail(
     email: string,
-    token: string,
+    code: string,
     ip: string,
     geo: any,
     userAgent: string
 ) {
     const resend = new Resend(process.env.RESEND_TOKEN);
-
-    const verifyUrl =
-        `${process.env.NEXT_PUBLIC_APP_URL}/verify-login?token=${token}`;
-
+    
     await resend.emails.send({
         from: "Nicholas Frangos <security@nicholasfrangos.com>",
         to: email,
-        subject: "Verify Your Login",
+        subject: "Your Login Verification Code",
         html: `
-            <h2>Verify Login Attempt</h2>
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; color: #111;">
+                
+                <h2 style="margin-bottom: 10px;">
+                    Verify Your Login
+                </h2>
 
-            <p>A login attempt was made on your account.</p>
+                <p>
+                    A login attempt was made on your account.
+                </p>
 
-            <p><strong>IP:</strong> ${ip}</p>
-            <p><strong>Device:</strong> ${userAgent}</p>
-            <p><strong>Country:</strong> ${geo?.location?.country || "Unknown"}</p>
-            <p><strong>Region:</strong> ${geo?.location?.region || "Unknown"}</p>
-            <p><strong>City:</strong> ${geo?.location?.city || "Unknown"}</p>
+                <div
+                    style="
+                        margin: 30px 0;
+                        padding: 20px;
+                        text-align: center;
+                        background: #f4f4f4;
+                        border-radius: 10px;
+                    "
+                >
+                    <p style="margin: 0; font-size: 14px; color: #666;">
+                        Your verification code
+                    </p>
 
-            <p>
-                <a href="${verifyUrl}">
-                    Verify Login
-                </a>
-            </p>
+                    <h1
+                        style="
+                            margin: 10px 0 0;
+                            font-size: 42px;
+                            letter-spacing: 8px;
+                        "
+                    >
+                        ${code}
+                    </h1>
+                </div>
 
-            <p>This link expires in 10 minutes.</p>
+                <h3 style="margin-top: 30px;">
+                    Login Details
+                </h3>
+
+                <p><strong>IP Address:</strong> ${ip}</p>
+                <p><strong>Device:</strong> ${userAgent}</p>
+                <p><strong>Country:</strong> ${geo?.location?.country || "Unknown"}</p>
+                <p><strong>Region:</strong> ${geo?.location?.region || "Unknown"}</p>
+                <p><strong>City:</strong> ${geo?.location?.city || "Unknown"}</p>
+
+                <p style="margin-top: 30px;">
+                    This code expires in 10 minutes.
+                </p>
+
+                <p style="color: #666; font-size: 14px;">
+                    If this wasn't you, you can safely ignore this email.
+                </p>
+
+            </div>
         `,
     });
 }
