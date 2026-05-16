@@ -1,24 +1,28 @@
 "use client";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
+import { useEffect, useRef } from "react";
 
 export default function NavLink(props: { title: string; link: string }){
 
     const pathName = usePathname();
     const router = useRouter();
 
+    useEffect(() => {
+        if (!window.location.hash) {
+            window.scrollTo({ top: 0, behavior: "auto" });
+        }
+    }, [pathName]);
+
     const handleClick = (e: React.MouseEvent) => {
 
         if (props.link === "/" && pathName === "/") {
             e.preventDefault();
             window.scrollTo({ top: 0, behavior: "smooth" });
+            return;
         }
 
-        else if (props.link === "/" && pathName !== "/") {
-            router.push("/");
-        }
-
-        else if (props.link.startsWith("#")) {
+        if (props.link.startsWith("#")) {
             e.preventDefault();
 
             const sectionId = props.link.replace("#", "");
@@ -26,6 +30,8 @@ export default function NavLink(props: { title: string; link: string }){
             document.getElementById(sectionId)?.scrollIntoView({
                 behavior: "smooth",
             });
+
+            return;
         }
     };
 
