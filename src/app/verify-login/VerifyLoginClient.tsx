@@ -36,6 +36,7 @@ export default function VerifyLoginClient() {
 
                 setTimeout(() => {
                     router.push("/");
+                    router.refresh();
                 }, 1000);
 
             } catch (err) {
