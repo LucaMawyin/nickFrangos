@@ -105,7 +105,13 @@ export default function Home() {
             <Title text="I'm Nicholas." />
             <Title text="Sports Media" />
             <div className="flex w-full p-[10%] justify-center md:justify-start md:pl-0">
-              <Button text="Resume" />
+              <Button 
+                text="Resume" 
+                onClick={() => {
+                  window.open("/resume.pdf", "_blank");
+                  return;
+                }}
+              />
             </div>
           </div>
 
