@@ -138,7 +138,17 @@ export default function Home() {
         <About />
       </section>
 
-      <section id="media" className="snap-start flex justify-center items-center min-h-[90vh]">
+      <section 
+        id="media" 
+        className="
+          snap-start 
+          flex 
+          items-start
+          md:items-center
+          justify-center 
+          min-h-[75vh]
+          md:min-h-[90vh]
+      ">
         <div className="w-full max-w-4xl p-6">
           <h2 className="text-center md:text-start text-[3em] font-bold mb-[5%]">Check Out My Latest Video</h2>
 

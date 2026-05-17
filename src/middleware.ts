@@ -7,9 +7,15 @@ const normalize = (p: string) => (p.startsWith("/") ? p : "/" + p);
 export function middleware(req: NextRequest) {
     const session = req.cookies.get("session")?.value;
     const path = req.nextUrl.pathname;
-    const isProtected = protectedRoutes.some(route =>
-        path.startsWith(normalize(route))
-    );
+    const isProtected = protectedRoutes.some(route => {
+        const base = normalize(route).replace(/\/$/, "");
+        const current = path.replace(/\/$/, "");
+
+        return (
+            current === base ||
+            current.startsWith(base + "/")
+        );
+    });
     
     if (isProtected && !session) {
         const loginUrl = new URL("/login", req.url);

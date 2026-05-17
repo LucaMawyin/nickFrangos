@@ -1,6 +1,6 @@
 
 export default function Tile(props : {
-    title : string, 
+    title? : string, 
     children?: React.ReactNode, 
     className?: string, 
     titleClassName?: string, 
@@ -10,7 +10,7 @@ export default function Tile(props : {
         <div 
             className={`
             flex
-            flex-1
+            ${props.className?.includes("flex-0")? "" : "flex-1"}
             flex-col
             
             ${props.className?.includes("max-w")? "" : "max-w-[40vw]"} 

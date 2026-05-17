@@ -21,6 +21,8 @@ export async function GET(request: NextRequest) {
             created_at,
             image_type
         FROM articles
+        WHERE is_draft=0
+        AND is_published=1
         ORDER BY created_at DESC
         LIMIT ? OFFSET ?
     `)
@@ -45,10 +47,15 @@ export async function POST(req: Request) {
     );
   }
   try {
+
     const formData = await req.formData();
+
+    const mode = formData.get("mode");
     const title = formData.get("title") as string;
     const content = formData.get("content") as string;
     const image = formData.get("image") as File | null;
+    const id = formData.get("id") as string | null;
+
     const imageType =
       (formData.get("imageType") as string) ||
       (image ? image.type : null);
@@ -62,25 +69,51 @@ export async function POST(req: Request) {
 
     const db = await getDB();
 
-    // Slug is mandatory
+    if (id) {
+      await db
+        .prepare(`
+          UPDATE articles
+          SET title = ?,
+              content = ?,
+              image = COALESCE(?, image),
+              image_type = COALESCE(?, image_type),
+              is_draft = ?,
+              is_published = ?,
+              updated_at = CURRENT_TIMESTAMP
+          WHERE id = ?
+        `)
+        .bind(
+          title,
+          content,
+          imageBuffer,
+          imageType?.trim() || null,
+          mode === "draft" ? 1 : 0,
+          mode === "publish" ? 1 : 0,
+          id
+        )
+        .run();
+
+      return NextResponse.json({ success: true, id });
+    }    
+
+    
     const slug = slugify(title);
 
-    // no duplicate slugs
-    const existing = await db
-      .prepare("SELECT id FROM articles WHERE slug = ?")
-      .bind(slug)
-      .first();
-
-    if (existing) {
-      return NextResponse.json(
-        { error: "Article Already Exists" },
-        { status: 400 }
-      );
-    }
-
     await db
-      .prepare("INSERT INTO articles (title, content, image, image_type, slug) VALUES (?, ?, ?, ?, ?)")
-      .bind(title, content, imageBuffer, imageType?.trim() || null, slug)
+      .prepare(`
+        INSERT INTO articles
+        (title, content, image, image_type, slug, is_draft, is_published)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+      `)
+      .bind(
+        title,
+        content,
+        imageBuffer,
+        imageType?.trim() || null,
+        slug,
+        mode === "draft" ? 1 : 0,
+        mode === "publish" ? 0 : 1
+      )
       .run();
 
     return NextResponse.json({ success: true });

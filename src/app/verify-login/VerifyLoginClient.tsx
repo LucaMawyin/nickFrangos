@@ -74,6 +74,8 @@ export default function VerifyLoginClient() {
             }
 
             const safeNext = isSafeNext(next) ? next : "/";
+            console.log("NEXT:", next);
+            console.log("SAFE NEXT:", isSafeNext(next));
 
             router.push(safeNext);
             router.refresh();                

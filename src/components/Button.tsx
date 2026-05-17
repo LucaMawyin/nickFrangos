@@ -3,7 +3,7 @@
 export default function Button(props : {
     text : string; 
     type?: "button" | "submit" | "reset";
-    variant?: "primary" | "secondary";
+    variant?: "primary" | "secondary" | "red";
     children?:React.ReactNode;
     className?:string;
     onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
@@ -21,6 +21,7 @@ export default function Button(props : {
         "bg-(--primary-blue) text-white hover:bg-(--primary-blue-hover) hover:shadow-xl",
         secondary:
         "bg-gray-200 text-black hover:bg-gray-300 hover:shadow-md",
+        red : "bg-red-600 text-white hover:bg-red-700 hover:shadow-md",
     };
 
     const disabledStyle = props.disabled

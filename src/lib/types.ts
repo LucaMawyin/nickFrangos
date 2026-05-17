@@ -97,6 +97,11 @@ export type YouTubeVideoResponse = {
     }[];
 };
 
+export type Draft = {
+  id: string;
+  title: string;
+};
+
 export interface Env {
   nicholas_db: D1Database;
   IPINFO_TOKEN : string;
