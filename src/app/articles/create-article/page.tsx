@@ -61,7 +61,10 @@ export default function CreatePage() {
 
       {showDrafts && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded w-96">
+          <Tile 
+            className="bg-white max-w-full md:max-w-96"
+            disableHover={true}
+          >
 
             <h2 className="text-lg font-bold mb-4">
               Select a Draft
@@ -70,13 +73,13 @@ export default function CreatePage() {
             {loading ? (
               <p>Loading...</p>
             ) : (
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-4 max-h-80 overflow-y-auto">
                 {drafts.map((d) => (
                   <Button
                     text={d.title}
                     key={d.id}
                     variant="secondary"
-                    className="w-full"
+                    className="w-full truncate"
                     onClick={() => {
                       setShowDrafts(false);
                       window.location.href =
@@ -84,18 +87,17 @@ export default function CreatePage() {
                     }}
                   />
                 ))}
-                <Button
-                  text="Close"
-                  variant="red"
-                  className="self-end"
-                  onClick={() => setShowDrafts(false)}
-                />                
+                
               </div>
             )}
 
-
-
-          </div>
+            <Button
+              text="Close"
+              variant="red"
+              className="self-end mt-4"
+              onClick={() => setShowDrafts(false)}
+            />
+          </Tile>
         </div>
       )}
     </div>

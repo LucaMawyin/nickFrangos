@@ -72,8 +72,15 @@ export default function CreateClient(props : {title:string; initialData? : any})
     // Successful publish reroutes to articles
     if (response.ok) {
       setError(null);
-      router.push("/articles");
-    } 
+
+      const slug = props.initialData?.slug;
+
+      if (mode === "publish") {
+        router.push(`/articles/read/${slug}`);
+      } else {
+        router.push("/articles");
+      }
+    }
 
     // Somehow access is gained but not logged in
     else if (response.status == 401){

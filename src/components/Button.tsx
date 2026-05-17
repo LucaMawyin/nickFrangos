@@ -14,7 +14,7 @@ export default function Button(props : {
         props.onClick?.(e);
     }
 
-    const base = "w-fit py-4 px-8 rounded-lg transition duration-(--transition-time) cursor-pointer";
+    const base = "min-h-14 py-4 px-8 rounded-lg transition duration-(--transition-time) cursor-pointer";
 
     const styles = {
         primary:

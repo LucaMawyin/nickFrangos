@@ -3,8 +3,13 @@
 import Button from "@/components/Button";
 import { useEffect, useState, useTransition } from "react";
 
-export default function DeleteButton({ action }: { action: () => void }) {
-
+export default function DeleteButton({
+  action,
+  className = "",
+}: {
+  action: () => void;
+  className?: string;
+}) {
 
     const [open, setOpen] = useState(false);
     const [isPending, startTransition] = useTransition();

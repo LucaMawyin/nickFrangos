@@ -88,6 +88,14 @@ export async function POST(req: Request) {
 }
 
 export async function GET() {
+
+  const cookieStore = await cookies();
+  const token = cookieStore.get("session")?.value;
+
+  if (!token) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+  
   const db = await getDB();
 
   const drafts = await db

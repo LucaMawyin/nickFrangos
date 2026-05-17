@@ -3,6 +3,7 @@ import { getDB } from "@/lib/db";
 import { deleteArticle } from "./actions";
 import { validateSession } from "@/lib/auth";
 import DeleteButton from "@/components/DeleteButton";
+import EditButton from "@/components/EditButton";
 
 export default async function ArticlePage({ params }: any){
 
@@ -10,12 +11,12 @@ export default async function ArticlePage({ params }: any){
 
     const db = await getDB();
     const article = await db
-        .prepare("SELECT * FROM articles WHERE slug = ?")
+        .prepare("SELECT * FROM articles WHERE slug = ? AND is_published = 1")
         .bind(params.slug)
         .first<Article>();
 
     if (!article) {
-        return <h1>Article not found</h1>;
+        return <h1 className="p-10">Article not found</h1>;
     }
 
     return (
@@ -42,12 +43,22 @@ export default async function ArticlePage({ params }: any){
 
             <div className="flex justify-center mt-10">
                 {session && (
-                    <DeleteButton 
-                        action={async () => {
-                            "use server";
-                            await deleteArticle(article.id);
-                        }}
-                    />
+                    <div className="flex 
+                        flex-col 
+                        gap-12
+                        sm:flex-row justify-between"
+                    >
+                        <EditButton slug={article.slug} className="w-full sm:w-48"/>
+
+                        <DeleteButton 
+                            className="w-full sm:w-48"
+                            action={async () => {
+                                "use server";
+                                await deleteArticle(article.id);
+                            }}
+                        />                    
+                    </div>
+
                 )}
             </div>
 

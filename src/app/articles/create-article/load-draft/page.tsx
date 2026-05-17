@@ -4,16 +4,15 @@ import { redirect } from "next/navigation";
 
 export default async function Page({ searchParams }: any) {
   const id = searchParams?.id ? Number(searchParams.id) : null;
+  const slug = searchParams?.slug || null;
 
   let draft = null;
+  let article = null;
 
-  if (!id) {
-    redirect("/articles/create-article");
-  }
+  const db = await getDB();
 
   if (id) {
-    const db = await getDB();
-
+  
     draft = await db
       .prepare(`
         SELECT * FROM articles
@@ -23,25 +22,33 @@ export default async function Page({ searchParams }: any) {
       .first();
   }
 
-  if (!draft){
+  if (!article && slug) {
+    article = await db
+      .prepare(`
+        SELECT * FROM articles
+        WHERE slug = ?
+      `)
+      .bind(slug)
+      .first();
+  }
+
+  if (!draft && !article) {
     redirect("/articles/create-article");
   }
 
+  const data = draft || article;
+
   let imageUrl = null;
 
-  if (draft?.image) {
-    const base64 = Buffer.from(draft.image as any).toString("base64");
-    imageUrl = `data:${draft.image_type};base64,${base64}`;
+  if (data?.image) {
+    const base64 = Buffer.from(data.image as any).toString("base64");
+    imageUrl = `data:${data.image_type};base64,${base64}`;
   }
 
   return (
-  <CreateClient
-    title="Load Existing Article"
-    initialData={
-      draft
-        ? { ...draft, imageUrl }
-        : null
-      }
+    <CreateClient
+      title={draft ? "Edit Draft" : "Edit Article"}
+      initialData={{ ...data, imageUrl }}
     />
   );
 }
