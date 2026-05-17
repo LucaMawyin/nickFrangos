@@ -2,6 +2,7 @@
 
 import Button from "@/components/Button";
 import { useEffect, useState, useTransition } from "react";
+import Tile from "./Tile";
 
 export default function DeleteButton({
   action,
@@ -48,12 +49,13 @@ export default function DeleteButton({
                     flex items-center justify-center
                     z-50"
                 >
-                    <div className="bg-white p-6 rounded shadow-md w-80">
-                        <h2 className="text-lg font-bold mb-4">
-                            Delete article?
-                        </h2>
+                    <Tile 
+                        title="Delete article?" 
+                        className="bg-white p-[5%] rounded shadow-md max-w-full sm:max-w-fit sm:p-[2%]"
+                        disableHover={true}
+                    >
 
-                        <p className="text-sm text-gray-600 mb-6">
+                        <p className="text-sm text-gray-600 mb-6 mt-4">
                             This action cannot be undone.
                         </p>
 
@@ -80,7 +82,7 @@ export default function DeleteButton({
 
                             </Button>
                         </div>
-                    </div>
+                    </Tile>
                 </div>
             )}
         </>

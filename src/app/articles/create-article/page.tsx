@@ -62,7 +62,7 @@ export default function CreatePage() {
       </Tile>
 
       {showDrafts && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
           <Tile 
             className="bg-white max-w-full md:max-w-96"
             disableHover={true}

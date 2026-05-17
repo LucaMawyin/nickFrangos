@@ -46,9 +46,8 @@ export default async function ArticlePage({
             )}
 
             <h1 className="text-3xl font-bold">{article.title}</h1>
-            <p className="text-sm text-gray-500 mt-2">
+            <p className="text-sm text-gray-500 mt-4">
                 Published <LocalDateTime value={article.published_at} />
-
             </p>
             <p className="text-sm text-gray-500 mt-2">
                 Updated <LocalDateTime value={article.updated_at} />
@@ -63,9 +62,11 @@ export default async function ArticlePage({
                 {session && (
                     <div className="flex 
                         flex-col 
-                        gap-12
-                        sm:flex-row justify-between"
-                    >
+                        sm:gap-12
+                        gap-8
+                        sm:flex-row justify-between
+                        w-full    
+                    ">
                         <EditButton id={article.id} className="w-full sm:w-48"/>
 
                         <DeleteButton 
