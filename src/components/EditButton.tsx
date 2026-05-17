@@ -3,7 +3,10 @@
 import { useRouter } from "next/navigation";
 import Button from "@/components/Button";
 
-export default function EditButton(props : {id : number; className?: string}) {
+export default function EditButton(props : {
+  id : number; 
+  className?: string;
+}) {
   const router = useRouter();
 
   return (
