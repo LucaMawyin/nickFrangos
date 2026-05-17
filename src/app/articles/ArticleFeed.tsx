@@ -79,6 +79,8 @@ export default function ArticleFeed(props : {articles : Article[]}){
                 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]
                 xl:grid-cols-4
                 place-items-stretch
+                auto-rows-fr
+
             ">
 
                 {articles.length === 0 ? (
@@ -99,8 +101,8 @@ export default function ArticleFeed(props : {articles : Article[]}){
                                         className="w-full mt-4"
                                     />
                                 )}
-                                <div className="p-4">
-                                    <p>
+                                <div className="p-4 pl-0 pb-0">
+                                    <p>Published{" "}
                                         {new Date(article.published_at).toLocaleDateString(
                                             "en-US", 
                                             {year : "numeric", month:"long", day:"numeric"}
