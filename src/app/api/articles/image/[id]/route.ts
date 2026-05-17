@@ -1,13 +1,16 @@
 import { getDB } from "@/lib/db";
 
-export async function GET(req: Request, context: any) {
-    const { params } = context;
+export async function GET(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+    const { id } = await params;
 
     const db = await getDB();
 
     const row = await db
         .prepare("SELECT image, image_type FROM articles WHERE id = ?")
-        .bind(params.id)
+        .bind(id)
         .first<{ image: any; image_type: string }>();
 
     if (!row?.image) {
@@ -19,7 +22,7 @@ export async function GET(req: Request, context: any) {
     return new Response(bytes, {
         headers: {
             "Content-Type": row.image_type,
-            "Cache-Control": "no-store",
+            "Cache-Control": "public, max-age=86400",
         },
     });
 }

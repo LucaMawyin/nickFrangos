@@ -5,14 +5,20 @@ import { validateSession } from "@/lib/auth";
 import DeleteButton from "@/components/DeleteButton";
 import EditButton from "@/components/EditButton";
 
-export default async function ArticlePage({ params }: any){
+export default async function ArticlePage({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
 
     const session = await validateSession();
+
+    const { slug } = await params;
 
     const db = await getDB();
     const article = await db
         .prepare("SELECT * FROM articles WHERE slug = ? AND is_published = 1")
-        .bind(params.slug)
+        .bind(slug)
         .first<Article>();
 
     if (!article) {

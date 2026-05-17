@@ -94,7 +94,7 @@ export default function ArticleFeed(props : {articles : Article[]}){
                             >
                                 {article.image_type && (
                                     <img
-                                        src={`/api/articles/image/${article.id}`}
+                                        src={`/api/articles/image/${article.id}?v=${Date.now()}`}
                                         alt={article.title}
                                         className="w-full mt-4"
                                     />

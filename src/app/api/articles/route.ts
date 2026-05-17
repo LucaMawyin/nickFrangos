@@ -50,6 +50,7 @@ export async function POST(req: Request) {
 
     const formData = await req.formData();
 
+    // Collecting form data
     const mode = formData.get("mode");
     const title = formData.get("title") as string;
     const content = formData.get("content") as string;
@@ -69,11 +70,9 @@ export async function POST(req: Request) {
 
     const db = await getDB();
 
-    console.log("imageBuffer exists:", !!imageBuffer);
-    console.log("imageType:", imageType);
-
+    // If the id exists then we update the article
     if (id) {
-      const result = await db
+      await db
         .prepare(`
           UPDATE articles
           SET title = ?,
@@ -82,6 +81,10 @@ export async function POST(req: Request) {
               image_type = CASE WHEN ? IS NOT NULL THEN ? ELSE image_type END,
               is_draft = ?,
               is_published = ?,
+              published_at = CASE 
+                WHEN is_published = 0 AND ? = 1 THEN CURRENT_TIMESTAMP
+                ELSE published_at
+              END,
               updated_at = CURRENT_TIMESTAMP
           WHERE id = ?
         `)
@@ -98,17 +101,17 @@ export async function POST(req: Request) {
           mode === "draft" ? 1 : 0,
           mode === "publish" ? 1 : 0,
 
+          mode === "publish" ? 1 : 0,
+
           id
         )
         .run();
-
-        console.log("rows affected:", result.meta?.changes);
         
 
       return NextResponse.json({ success: true, id });
     }    
 
-    
+    // If there is no id we need to create the article
     const slug = slugify(title);
 
     const result = await db

@@ -2,8 +2,14 @@ import { getDB } from "@/lib/db";
 import CreateClient from "../CreateClient";
 import { redirect } from "next/navigation";
 
-export default async function Page({ searchParams }: any) {
-  const id = searchParams?.id ? Number(searchParams.id) : null;
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ id?: string }>
+}) {
+  const sp = await searchParams;
+
+  const id = sp?.id ? Number(sp.id) : null;
 
   let draft = null;
 
