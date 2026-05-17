@@ -13,7 +13,6 @@ export default function Login(props : {isLoggedIn : boolean}){
     const searchParams = useSearchParams();
 
     const next = searchParams.get("next") || "/";
-    console.log("LOGIN NEXT:", next);
 
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState("");
