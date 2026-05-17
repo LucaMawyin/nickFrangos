@@ -5,7 +5,7 @@ import { validateSession } from "@/lib/auth";
 import DeleteButton from "@/components/DeleteButton";
 import EditButton from "@/components/EditButton";
 import Link from "next/link";
-import LocalDate from "@/components/LocalDate";
+import LocalDateTime from "@/components/LocalDateTime";
 
 export default async function ArticlePage({
   params,
@@ -22,21 +22,19 @@ export default async function ArticlePage({
         .prepare("SELECT * FROM articles WHERE slug = ? AND is_published = 1")
         .bind(slug)
         .first<Article>();
-        
 
     if (!article) {
         return <h1 className="p-10">Article not found</h1>;
     }
-
+    
     return (
         <div className="p-8 max-w-3xl mx-auto">
             
-            <Link 
+            <Link
                 href="/articles"
+                className="inline-block mb-8 hover:scale-110 transition-transform duration-(--transition-time)"
             >
-                <div className="pb-8">
-                    &lt; Back to Articles
-                </div>
+                &lt; Back to Articles
             </Link>
 
             {article.image_type && (
@@ -49,10 +47,12 @@ export default async function ArticlePage({
 
             <h1 className="text-3xl font-bold">{article.title}</h1>
             <p className="text-sm text-gray-500 mt-2">
-                Published <LocalDate value={article.published_at}/>
+                Published <LocalDateTime value={article.published_at} />
+
             </p>
             <p className="text-sm text-gray-500 mt-2">
-                Updated <LocalDate value={article.updated_at}/>
+                Updated <LocalDateTime value={article.updated_at} />
+
             </p>
 
             <div className="mt-6 whitespace-pre-wrap">
