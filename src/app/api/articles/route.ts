@@ -18,12 +18,12 @@ export async function GET(request: NextRequest) {
             id,
             title,
             slug,
-            created_at,
+            published_at,
             image_type
         FROM articles
         WHERE is_draft=0
         AND is_published=1
-        ORDER BY created_at DESC
+        ORDER BY published_at DESC
         LIMIT ? OFFSET ?
     `)
     .bind(limit, offset)
@@ -56,6 +56,8 @@ export async function POST(req: Request) {
     const image = formData.get("image") as File | null;
     const id = formData.get("id") as string | null;
 
+    console.log(id)
+
     const imageType =
       (formData.get("imageType") as string) ||
       (image ? image.type : null);
@@ -68,6 +70,8 @@ export async function POST(req: Request) {
     }
 
     const db = await getDB();
+
+    console.log("HERE")
 
     if (id) {
       await db
@@ -112,7 +116,7 @@ export async function POST(req: Request) {
         imageType?.trim() || null,
         slug,
         mode === "draft" ? 1 : 0,
-        mode === "publish" ? 0 : 1
+        mode === "publish" ? 1 : 0
       )
       .run();
 

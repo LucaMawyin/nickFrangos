@@ -13,6 +13,8 @@ export default async function Page({ searchParams }: any) {
 
   if (id) {
   
+    
+
     draft = await db
       .prepare(`
         SELECT * FROM articles
@@ -22,7 +24,7 @@ export default async function Page({ searchParams }: any) {
       .first();
   }
 
-  if (!article && slug) {
+  else if (!article && slug) {
     article = await db
       .prepare(`
         SELECT * FROM articles

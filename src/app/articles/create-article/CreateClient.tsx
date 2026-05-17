@@ -16,6 +16,7 @@ export default function CreateClient(props : {title:string; initialData? : any})
   const [preview, setPreview] = useState<string | null>(null);
   const [existingImage, setExistingImage] = useState<string | null>(null);
 
+  // Setting data if loading a draft that exists
   useEffect(() => {
     if (!props.initialData) return;
 
@@ -38,6 +39,7 @@ export default function CreateClient(props : {title:string; initialData? : any})
     const file = e.target.files?.[0];
     if (file) {
       setImageFile(file);
+      setExistingImage(null);
       setPreview(URL.createObjectURL(file));
     }
   };
@@ -55,6 +57,8 @@ export default function CreateClient(props : {title:string; initialData? : any})
     formData.append("title", title);
     formData.append("content", content);
     formData.append("mode", mode);
+    
+
     if (props.initialData?.id) {
       formData.append("id", props.initialData.id);
     }
@@ -102,6 +106,7 @@ export default function CreateClient(props : {title:string; initialData? : any})
     const file = e.dataTransfer.files?.[0];
     if (file && file.type.startsWith("image/")) {
       setImageFile(file);
+      setExistingImage(null);
       setPreview(URL.createObjectURL(file));
     }
   };

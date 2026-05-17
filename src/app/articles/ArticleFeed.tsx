@@ -101,7 +101,7 @@ export default function ArticleFeed(props : {articles : Article[]}){
                                 )}
                                 <div className="p-4">
                                     <p>
-                                        {new Date(article.created_at).toLocaleDateString(
+                                        {new Date(article.published_at).toLocaleDateString(
                                             "en-US", 
                                             {year : "numeric", month:"long", day:"numeric"}
                                         )}

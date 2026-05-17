@@ -42,6 +42,8 @@ export type Article = {
   image_type : string;
   slug : string;
   created_at: string;
+  updated_at:string;
+  published_at:string;
 };
 
 export type ArticleResponse = {

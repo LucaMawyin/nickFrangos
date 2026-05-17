@@ -31,10 +31,30 @@ export default async function ArticlePage({ params }: any){
 
             <h1 className="text-3xl font-bold">{article.title}</h1>
             <p className="text-sm text-gray-500 mt-2">
-                {new Date(article.created_at).toLocaleDateString(
+                Published{" "}
+                {new Date(article.published_at + "Z").toLocaleDateString(
                     "en-US",
-                    { year: "numeric", month: "long", day: "numeric" }
+                    { 
+                        year: "numeric", 
+                        month: "long", 
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit"
+                    }
                 )}
+            </p>
+            <p className="text-sm text-gray-500 mt-2">
+                Updated{" "}
+                {new Date(article.updated_at + "Z").toLocaleDateString(
+                    "en-US",
+                    { 
+                        year: "numeric", 
+                        month: "long", 
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit"
+                    }
+                )}  
             </p>
 
             <div className="mt-6 whitespace-pre-wrap">
