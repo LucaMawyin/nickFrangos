@@ -4,6 +4,8 @@ import { deleteArticle } from "./actions";
 import { validateSession } from "@/lib/auth";
 import DeleteButton from "@/components/DeleteButton";
 import EditButton from "@/components/EditButton";
+import Link from "next/link";
+import LocalDate from "@/components/LocalDate";
 
 export default async function ArticlePage({
   params,
@@ -20,13 +22,23 @@ export default async function ArticlePage({
         .prepare("SELECT * FROM articles WHERE slug = ? AND is_published = 1")
         .bind(slug)
         .first<Article>();
+        
 
     if (!article) {
         return <h1 className="p-10">Article not found</h1>;
     }
 
     return (
-        <div className="p-10 max-w-3xl mx-auto">
+        <div className="p-8 max-w-3xl mx-auto">
+            
+            <Link 
+                href="/articles"
+            >
+                <div className="pb-8">
+                    &lt; Back to Articles
+                </div>
+            </Link>
+
             {article.image_type && (
                 <img
                     src={`/api/articles/image/${article.id}?v=${article.updated_at}`}
@@ -37,30 +49,10 @@ export default async function ArticlePage({
 
             <h1 className="text-3xl font-bold">{article.title}</h1>
             <p className="text-sm text-gray-500 mt-2">
-                Published{" "}
-                {new Date(article.published_at + "Z").toLocaleDateString(
-                    "en-US",
-                    { 
-                        year: "numeric", 
-                        month: "long", 
-                        day: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit"
-                    }
-                )}
+                Published <LocalDate value={article.published_at}/>
             </p>
             <p className="text-sm text-gray-500 mt-2">
-                Updated{" "}
-                {new Date(article.updated_at + "Z").toLocaleDateString(
-                    "en-US",
-                    { 
-                        year: "numeric", 
-                        month: "long", 
-                        day: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit"
-                    }
-                )}  
+                Updated <LocalDate value={article.updated_at}/>
             </p>
 
             <div className="mt-6 whitespace-pre-wrap">

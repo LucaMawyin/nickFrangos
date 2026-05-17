@@ -22,7 +22,7 @@ export async function GET(
     return new Response(bytes, {
         headers: {
             "Content-Type": row.image_type,
-            "Cache-Control": "public, max-age=86400",
+            "Cache-Control": "no-store",
         },
     });
 }
