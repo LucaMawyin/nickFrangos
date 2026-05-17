@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import Button from "@/components/Button";
 
-export default function EditButton(props : {slug : string; className?: string}) {
+export default function EditButton(props : {id : number; className?: string}) {
   const router = useRouter();
 
   return (
@@ -12,7 +12,7 @@ export default function EditButton(props : {slug : string; className?: string}) 
       variant="secondary"
       className={props.className}
       onClick={() => {
-        router.push(`/articles/create-article/load-draft?slug=${props.slug}`);
+        router.push(`/articles/create-article/load-draft?id=${props.id}`);
       }}
     />
   );

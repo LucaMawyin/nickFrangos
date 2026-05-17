@@ -14,7 +14,8 @@ export default function CreateClient(props : {title:string; initialData? : any})
   const [title, setTitle] = useState(props.initialData?.title ?? "");
   const [content, setContent] = useState(props.initialData?.content ?? "");
   const [preview, setPreview] = useState<string | null>(null);
-  const [existingImage, setExistingImage] = useState<string | null>(null);
+
+  
 
   // Setting data if loading a draft that exists
   useEffect(() => {
@@ -22,32 +23,35 @@ export default function CreateClient(props : {title:string; initialData? : any})
 
     setTitle(props.initialData.title ?? "");
     setContent(props.initialData.content ?? "");
+
     if (props.initialData.imageUrl) {
       setPreview(props.initialData.imageUrl);
-      setExistingImage(props.initialData.imageUrl);
     }
-  }, [props.initialData]);  
+  }, [props.initialData]); 
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [ imageFile, setImageFile ] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [mode, setMode] = useState<"draft" | "publish">("draft");
-
 
   // Handling thumbnail for post
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setImageFile(file);
-      setExistingImage(null);
-      setPreview(URL.createObjectURL(file));
-    }
+    if (!file) return;
+
+    setImageFile(file);
+    setPreview(URL.createObjectURL(file));
   };
 
-  async function handleSubmit(e : React.FormEvent){
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>){
     e.preventDefault();
 
-    if (mode === "publish" && !imageFile && !existingImage) {
+    const submitter = (
+      e.nativeEvent as SubmitEvent
+    ).submitter as HTMLButtonElement;
+
+    const mode = submitter.value as "draft" | "publish";
+
+    if (mode === "publish" && !imageFile && !props.initialData?.imageUrl) {
       setError("Image required for publishing");
       return;
     }
@@ -63,6 +67,7 @@ export default function CreateClient(props : {title:string; initialData? : any})
       formData.append("id", props.initialData.id);
     }
 
+    console.log(imageFile)
     if (imageFile) { 
       formData.append("image", imageFile);
       formData.append("imageType", imageFile.type);
@@ -106,7 +111,6 @@ export default function CreateClient(props : {title:string; initialData? : any})
     const file = e.dataTransfer.files?.[0];
     if (file && file.type.startsWith("image/")) {
       setImageFile(file);
-      setExistingImage(null);
       setPreview(URL.createObjectURL(file));
     }
   };
@@ -190,14 +194,16 @@ export default function CreateClient(props : {title:string; initialData? : any})
             <Button
               text="Save Draft" 
               type="submit" 
+              name="mode"
+              value="draft"
               className="w-full sm:w-48"
-              onClick={() => setMode("draft")}
             />
             <Button 
               text="Post" 
               type="submit" 
+              name="mode"
+              value="publish"
               className="w-full sm:w-48"
-              onClick={() => setMode("publish")}
             />
             <Button
               text="Cancel"

@@ -8,6 +8,8 @@ export default function Button(props : {
     className?:string;
     onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
     disabled?: boolean;
+    name?:string;
+    value?:string;
 }){
 
     function clickEvent(e: React.MouseEvent<HTMLButtonElement>) {
@@ -33,7 +35,10 @@ export default function Button(props : {
             type={props.type ?? "button"}
             onClick={clickEvent} 
             disabled={props.disabled}
-            className={`${base} ${styles[props.variant ?? "primary"]} ${props.className ?? ""} ${disabledStyle}`}>
+            className={`${base} ${styles[props.variant ?? "primary"]} ${props.className ?? ""} ${disabledStyle}`}
+            name={props.name}
+            value={props.value}
+        >
                 
             {props.text}
             {props.children}

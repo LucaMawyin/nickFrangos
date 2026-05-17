@@ -23,7 +23,7 @@ export default async function ArticlePage({ params }: any){
         <div className="p-10 max-w-3xl mx-auto">
             {article.image_type && (
                 <img
-                    src={`/api/articles/image/${article.id}`}
+                    src={`/api/articles/image/${article.id}?v=${article.updated_at}`}
                     alt={article.title}
                     className="w-full h-auto rounded-lg mb-6 object-cover"
                 />
@@ -68,7 +68,7 @@ export default async function ArticlePage({ params }: any){
                         gap-12
                         sm:flex-row justify-between"
                     >
-                        <EditButton slug={article.slug} className="w-full sm:w-48"/>
+                        <EditButton id={article.id} className="w-full sm:w-48"/>
 
                         <DeleteButton 
                             className="w-full sm:w-48"

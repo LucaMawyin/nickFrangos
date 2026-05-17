@@ -56,8 +56,6 @@ export async function POST(req: Request) {
     const image = formData.get("image") as File | null;
     const id = formData.get("id") as string | null;
 
-    console.log(id)
-
     const imageType =
       (formData.get("imageType") as string) ||
       (image ? image.type : null);
@@ -71,16 +69,17 @@ export async function POST(req: Request) {
 
     const db = await getDB();
 
-    console.log("HERE")
+    console.log("imageBuffer exists:", !!imageBuffer);
+    console.log("imageType:", imageType);
 
     if (id) {
-      await db
+      const result = await db
         .prepare(`
           UPDATE articles
           SET title = ?,
               content = ?,
-              image = COALESCE(?, image),
-              image_type = COALESCE(?, image_type),
+              image = CASE WHEN ? IS NOT NULL THEN ? ELSE image END,
+              image_type = CASE WHEN ? IS NOT NULL THEN ? ELSE image_type END,
               is_draft = ?,
               is_published = ?,
               updated_at = CURRENT_TIMESTAMP
@@ -89,13 +88,22 @@ export async function POST(req: Request) {
         .bind(
           title,
           content,
+
           imageBuffer,
-          imageType?.trim() || null,
+          imageBuffer,
+
+          imageType,
+          imageType,
+
           mode === "draft" ? 1 : 0,
           mode === "publish" ? 1 : 0,
+
           id
         )
         .run();
+
+        console.log("rows affected:", result.meta?.changes);
+        
 
       return NextResponse.json({ success: true, id });
     }    
@@ -103,7 +111,7 @@ export async function POST(req: Request) {
     
     const slug = slugify(title);
 
-    await db
+    const result = await db
       .prepare(`
         INSERT INTO articles
         (title, content, image, image_type, slug, is_draft, is_published)
@@ -120,7 +128,13 @@ export async function POST(req: Request) {
       )
       .run();
 
-    return NextResponse.json({ success: true });
+    const newId = result.meta?.last_row_id;
+
+    return NextResponse.json({
+      success: true,
+      id: newId,
+      slug
+    });
   } catch (err) {
     console.error(err);
 

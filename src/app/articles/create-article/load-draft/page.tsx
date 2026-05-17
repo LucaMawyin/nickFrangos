@@ -4,41 +4,26 @@ import { redirect } from "next/navigation";
 
 export default async function Page({ searchParams }: any) {
   const id = searchParams?.id ? Number(searchParams.id) : null;
-  const slug = searchParams?.slug || null;
 
   let draft = null;
-  let article = null;
 
   const db = await getDB();
 
   if (id) {
-  
-    
-
     draft = await db
       .prepare(`
         SELECT * FROM articles
-        WHERE id = ? AND is_draft = 1
+        WHERE id = ?
       `)
       .bind(id)
       .first();
   }
 
-  else if (!article && slug) {
-    article = await db
-      .prepare(`
-        SELECT * FROM articles
-        WHERE slug = ?
-      `)
-      .bind(slug)
-      .first();
-  }
-
-  if (!draft && !article) {
+  if (!draft) {
     redirect("/articles/create-article");
   }
 
-  const data = draft || article;
+  const data = draft;
 
   let imageUrl = null;
 
