@@ -5,9 +5,13 @@ import { useRouter } from "next/navigation";
 import { LoginResponse } from "@/lib/types";
 import Tile from "@/components/Tile"
 import Button from "@/components/Button";
+import resizeImage from "@/lib/resizeImage";
+
 
 
 export default function CreateClient(props : {title:string; initialData? : any}){
+
+  const MAX_SIZE = 1.5 * 1024 * 1024;
 
   const router = useRouter();
 
@@ -34,12 +38,38 @@ export default function CreateClient(props : {title:string; initialData? : any})
   const [error, setError] = useState<string | null>(null);
 
   // Handling thumbnail for post
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setImageFile(file);
-    setPreview(URL.createObjectURL(file));
+    let finalFile = file;
+
+    if (file.size > MAX_SIZE) {
+      finalFile = await resizeImage(file);
+    }
+
+    setError(null);
+    setImageFile(finalFile);
+    setPreview(URL.createObjectURL(finalFile));
+  };
+
+  // Image drop
+  const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+
+    const file = e.dataTransfer.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) return;
+
+    let finalFile: File = file;
+
+    if (file.size > MAX_SIZE) {
+      finalFile = await resizeImage(file);
+    }
+
+    setError(null);
+    setImageFile(finalFile);
+    setPreview(URL.createObjectURL(finalFile));
   };
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>){
@@ -104,16 +134,7 @@ export default function CreateClient(props : {title:string; initialData? : any})
 
   }
 
-  // Image drop
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
 
-    const file = e.dataTransfer.files?.[0];
-    if (file && file.type.startsWith("image/")) {
-      setImageFile(file);
-      setPreview(URL.createObjectURL(file));
-    }
-  };
 
   return (
     <div 
