@@ -193,7 +193,7 @@ export default function CreateClient(props : {title:string; initialData? : any})
               variant="secondary"
               className="w-full sm:w-48"
               onClick={() => {
-                router.push("/articles");
+                router.push("/articles/create-article");
               }}
             />
           </div>
