@@ -11,7 +11,7 @@ import resizeImage from "@/lib/resizeImage";
 
 export default function CreateClient(props : {title:string; initialData? : any}){
 
-  const MAX_SIZE = 1.5 * 1024 * 1024;
+  const MAX_SIZE = 0.5 * 1024 * 1024;
 
   const router = useRouter();
 
