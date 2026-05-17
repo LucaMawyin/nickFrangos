@@ -1,5 +1,5 @@
 export default function LocalDateTime({ value }: { value: string }) {
-    const d = new Date(value.replace(" ", "T") + "Z");
+    const d = new Date(value);
 
     const date = d.toLocaleDateString(undefined, {
         year: "numeric",

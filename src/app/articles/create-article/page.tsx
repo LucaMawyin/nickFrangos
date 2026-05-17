@@ -38,13 +38,15 @@ export default function CreatePage() {
       items-center justify-center
     ">
       <Tile 
+        title="Create an Article"
         disableHover={true}
-        className="flex-0 min-w-fit p-[5%]"
+        className="flex-0 min-w-fit"
       >
         <div className="
           flex flex-col 
           w-64 gap-10
           self-center
+          m-[10%]
         ">
           <LinkButton 
             text="Create New Article" 
