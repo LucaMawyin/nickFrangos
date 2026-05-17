@@ -13,22 +13,43 @@ export default function resizeImage(
       URL.revokeObjectURL(url);
 
       const canvas = document.createElement("canvas");
-
-      const scale = Math.min(1, maxWidth / img.width);
-
-      canvas.width = img.width * scale;
-      canvas.height = img.height * scale;
-
       const ctx = canvas.getContext("2d");
+
       if (!ctx) {
         reject(new Error("Canvas not supported"));
         return;
       }
 
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      // Crop image to 3 : 2 ratio
+      const targetRatio = 3 / 2;
+      const imgRatio = img.width / img.height;
 
+      let sx = 0;
+      let sy = 0;
+      let sw = img.width;
+      let sh = img.height;
+
+      if (imgRatio > targetRatio) {
+        // too wide
+        sw = img.height * targetRatio;
+        sx = (img.width - sw) / 2;
+      } else {
+        // too tall
+        sh = img.width / targetRatio;
+        sy = (img.height - sh) / 2;
+      }
+
+      // Resize image after cropping
+      const width = Math.min(maxWidth, sw);
+      const height = Math.round(width * 2 / 3);
+
+      canvas.width = width;
+      canvas.height = height;
+
+      ctx.drawImage(img, sx, sy, sw, sh, 0, 0, width, height);
+
+      // Export as jpeg
       const mimeType = "image/jpeg";
-
       const newName = file.name.replace(/\.\w+$/, "") + ".jpg";
 
       canvas.toBlob((blob) => {

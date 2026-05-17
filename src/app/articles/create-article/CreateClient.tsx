@@ -11,7 +11,7 @@ import resizeImage from "@/lib/resizeImage";
 
 export default function CreateClient(props : {title:string; initialData? : any}){
 
-  const MAX_SIZE = 0.5 * 1024 * 1024;
+  const MAX_SIZE = 0.2 * 1024 * 1024;
 
   const router = useRouter();
 
@@ -42,10 +42,10 @@ export default function CreateClient(props : {title:string; initialData? : any})
     const file = e.target.files?.[0];
     if (!file) return;
 
-    let finalFile = file;
+    let finalFile = await resizeImage(file);
 
-    if (file.size > MAX_SIZE) {
-      finalFile = await resizeImage(file);
+    while (finalFile.size > MAX_SIZE) {
+      finalFile = await resizeImage(finalFile);
     }
 
     setError(null);
@@ -61,10 +61,10 @@ export default function CreateClient(props : {title:string; initialData? : any})
     if (!file) return;
     if (!file.type.startsWith("image/")) return;
 
-    let finalFile: File = file;
+    let finalFile = await resizeImage(file);
 
-    if (file.size > MAX_SIZE) {
-      finalFile = await resizeImage(file);
+    while (finalFile.size > MAX_SIZE) {
+      finalFile = await resizeImage(finalFile);
     }
 
     setError(null);
@@ -133,8 +133,6 @@ export default function CreateClient(props : {title:string; initialData? : any})
     }
 
   }
-
-
 
   return (
     <div 
