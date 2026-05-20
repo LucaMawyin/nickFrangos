@@ -23,7 +23,7 @@ export default async function Layout({
   const db = await getDB();
 
   const session = await db
-    .prepare(`SELECT * FROM sessions WHERE token = ?`)
+    .prepare(`SELECT * FROM sessions WHERE token = ? AND expires_at > datetime('now')`)
     .bind(token)
     .first();
 
