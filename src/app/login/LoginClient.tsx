@@ -79,7 +79,7 @@ export default function Login(props : {isLoggedIn : boolean}){
 
 
     return (
-        <div className="flex justify-center items-center min-h-[90vh]">
+        <div className="flex min-h-[50vh] sm:flex-1 justify-center items-center">
             <Tile 
             title="Login"
             disableHover={true}

@@ -36,7 +36,7 @@ export default function NavBarClient(
                 px-[5vw] py-[2vw] 
                 shadow-sm/10 
                 h-[10vh]
-                sticky top-0 z-50"
+                fixed top-0 z-50 w-screen"
             >
                 <NavLink title="Nicholas" link="/" />
                 <nav className="flex gap-6">
@@ -63,7 +63,7 @@ export default function NavBarClient(
                 px-[5vw] py-[2vw] 
                 shadow-sm/10 
                 h-[10vh]
-                sticky top-0 z-50"
+                fixed top-0 z-50 w-screen"
             >  
                 <NavLink
                     title="Nicholas"

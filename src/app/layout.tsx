@@ -1,3 +1,4 @@
+import Footer from "@/components/Footer";
 import "./global.css";
 import NavBar from "@/components/NavBar";
 import { pages } from "@/lib/pages"; 
@@ -13,9 +14,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body className="min-h-screen flex flex-col">
         <NavBar pageList={pages}/>
-        {children}
+        <div className="pt-[10vh] flex-1 flex flex-col">
+          {children}
+        </div>
+        <Footer/>
       </body>
     </html>
   );

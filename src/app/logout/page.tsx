@@ -23,8 +23,7 @@ export default function Logout() {
 
   return (
     <div className="
-        h-[90vh] 
-        flex flex-col 
+        flex flex-1 flex-col 
         gap-8 
         justify-center items-center"
     >

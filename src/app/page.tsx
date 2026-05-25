@@ -7,6 +7,7 @@ import Button from "@/components/Button"
 import Icon from "@/components/Icon";
 import About from "@/components/About";
 import { YouTubeResponse } from "@/lib/types";
+import { links } from "@/lib/links";
 
 export default function Home() {
 
@@ -59,13 +60,6 @@ export default function Home() {
 
       return () => observer.disconnect();
   }, []);
-
-  const links = {
-    instagram: "https://www.instagram.com/niche_0805/",
-    tiktok: "https://www.tiktok.com/@niche_0805",
-    linkedin: "https://www.linkedin.com/in/nicholas-frangos-4b857432a/",
-    email: "mailto:nicholas.frangos0@gmail.com",
-  }
 
   useEffect(() => {
     async function loadVideo() {
@@ -147,7 +141,7 @@ export default function Home() {
           md:items-center
           justify-center 
           min-h-[75vh]
-          md:min-h-[90vh]
+          md:min-h-[80vh]
       ">
         <div className="w-full max-w-4xl p-6">
           <h2 className="text-center md:text-start text-[3em] font-bold mb-[5%]">Check Out My Latest Video</h2>
