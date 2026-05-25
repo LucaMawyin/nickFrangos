@@ -1,0 +1,18 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <path
+    d="
+      M16 48
+      V16
+      L42 48
+      V16
+      M42 16
+      H58
+      M42 32
+      H54
+    "
+    stroke="#48a1fa"
+    stroke-width="6"
+    stroke-linecap="square"
+    fill="none"
+  />
+</svg>

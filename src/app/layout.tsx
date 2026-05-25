@@ -5,6 +5,9 @@ import { pages } from "@/lib/pages";
 
 export const metadata = {
     title: "Nicholas Frangos",
+    icons : {
+      icon : "/icon.svg",
+    },
 };
 
 export default function RootLayout({
