@@ -128,6 +128,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ABOUT ME */}
       <section id="about" className="snap-start">
         <About />
       </section>
