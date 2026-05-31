@@ -21,42 +21,29 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-      const sections = Array.from(document.querySelectorAll<HTMLElement>("section[id]"));
-
-      if (!sections.length) return;
+      const sections = document.querySelectorAll("section[id]");
 
       const observer = new IntersectionObserver(
-          () => {
-              let bestSection: HTMLElement | null = null;
-              let bestRatio = 0;
+          (entries) => {
+              const visible = entries
+                  .filter(e => e.isIntersecting)
+                  .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
 
-              for (const section of sections) {
-                  const rect = section.getBoundingClientRect();
-
-                  const height = window.innerHeight;
-                  const visibleHeight =
-                      Math.min(rect.bottom, height) - Math.max(rect.top, 0);
-
-                  const ratio = Math.max(0, visibleHeight / height);
-
-                  if (ratio > bestRatio) {
-                      bestRatio = ratio;
-                      bestSection = section;
-                  }
-              }
-
-              if (bestSection?.id && bestRatio > 0.4) {
-                  window.history.replaceState(null, "", `#${bestSection.id}`);
-              } else {
-                  window.history.replaceState(null, "", "/");
+              if (visible.length > 0) {
+                  const id = visible[0].target.id;
+                  window.history.replaceState(
+                      null,
+                      "",
+                      id === "hero" ? "/" : `/#${id}`
+                  );
               }
           },
           {
-              threshold: [0, 0.1, 0.5, 1],
+              threshold: 0.5
           }
       );
 
-      sections.forEach((section) => observer.observe(section));
+      sections.forEach((s) => observer.observe(s));
 
       return () => observer.disconnect();
   }, []);
@@ -78,7 +65,8 @@ export default function Home() {
 
     <>
       <section
-        className="snap-start
+        id="hero"
+        className="
         flex flex-row flex-wrap 
         justify-center items-center
         min-h-[90vh]">
@@ -129,14 +117,13 @@ export default function Home() {
       </section>
 
       {/* ABOUT ME */}
-      <section id="about" className="snap-start">
+      <section id="about">
         <About />
       </section>
 
       <section 
         id="media" 
         className="
-          snap-start 
           flex 
           items-start
           md:items-center
