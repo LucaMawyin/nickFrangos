@@ -12,22 +12,16 @@ export async function validateSession() {
 
     const db = await getDB();
 
+    await db.prepare(`
+        DELETE FROM sessions
+        WHERE expires_at < datetime('now')
+    `).run();
+
     const session = await db.prepare(`
         SELECT * FROM sessions WHERE token = ?
     `).bind(token).first<Session>();
 
     if (!session) return null;
-
-    const expiresAt = new Date(session.expires_at);
-
-    if (expiresAt < new Date()){
-        await db.prepare(`
-            DELETE FROM sessions
-            WHERE token = ?
-        `).bind(token).run()
-
-        return null;
-    }
 
     return session;
 }
