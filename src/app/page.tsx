@@ -131,7 +131,7 @@ export default function Home() {
           min-h-[75vh]
           md:min-h-[80vh]
       ">
-        <div className="w-full max-w-4xl p-6">
+        <div className="w-full max-w-4xl p-6 pb-0">
           <h2 className="text-center md:text-start text-[3em] font-bold mb-[5%]">Check Out My Latest Video</h2>
 
           {videoId ? (

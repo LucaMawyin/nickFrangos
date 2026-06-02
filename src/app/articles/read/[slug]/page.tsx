@@ -28,7 +28,13 @@ export default async function ArticlePage({
     }
     
     return (
-        <div className="p-8 max-w-4xl mx-auto border-x border-gray-200">
+        <div className="
+            p-8 
+            max-w-4xl 
+            mx-auto 
+            border-x border-b border-gray-200 r
+            rounded-b-xl
+        ">
             
             <Link
                 href="/articles"
