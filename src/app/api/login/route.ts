@@ -107,13 +107,15 @@ export async function POST(request : Request){
 }
 
 async function getGeoFromIp(ip: string) {
-    const token = process.env.IPIFY_TOKEN;
+    const token = process.env.IPINFO_KEY;
 
     if (!token || ip === "unknown") return null;
 
     try {
-        const res = await fetch(`https://geo.ipify.org/api/v2/country,city,vpn?apiKey=${token}&ipAddress=${ip}`);
-        if (!res.ok) return null;
+        const res = await fetch(
+            `https://ipinfo.io/${ip}?token=${token}`
+        );
+    if (!res.ok) return null;
         return await res.json();
     } catch (err) {
         return err;
@@ -174,9 +176,9 @@ async function sendVerificationEmail(
 
                 <p><strong>IP Address:</strong> ${ip}</p>
                 <p><strong>Device:</strong> ${userAgent}</p>
-                <p><strong>Country:</strong> ${geo?.location?.country || "Unknown"}</p>
-                <p><strong>Region:</strong> ${geo?.location?.region || "Unknown"}</p>
-                <p><strong>City:</strong> ${geo?.location?.city || "Unknown"}</p>
+                <p><strong>Country:</strong> ${geo?.country || "Unknown"}</p>
+                <p><strong>Region:</strong> ${geo?.region || "Unknown"}</p>
+                <p><strong>City:</strong> ${geo?.city || "Unknown"}</p>
 
                 <p style="margin-top: 30px;">
                     This code expires in 10 minutes.
