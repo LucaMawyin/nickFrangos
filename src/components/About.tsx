@@ -1,4 +1,5 @@
 import Tile from '@/components/Tile'
+import ReactMarkdown from "react-markdown";
 
 export default function About(props : {about : string}){
     
@@ -19,7 +20,9 @@ export default function About(props : {about : string}){
                     alt="Headshot"
                     className="max-w-[75%] p-[5%] self-center"/>
                 <div className="flex flex-col p-[5%] justify-end">
-                    <p>{props.about}</p>
+                    <div className="mb-8 whitespace-pre-line">
+                        <ReactMarkdown>{props.about}</ReactMarkdown>
+                    </div>
                 </div>
             </Tile>
 
