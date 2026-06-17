@@ -11,12 +11,14 @@ export default function About(props : {about : string}){
             <Tile 
                 title="About Me"
                 disableHover={true}
+                childClassName="mt-0! flex h-full justify-evenly"
+                className="p-[5%] sm:p-[2%]"
             >
                 <img 
                     src="/images/headshot.jpg" 
                     alt="Headshot"
                     className="max-w-[75%] p-[5%] self-center"/>
-                <div className="flex flex-col flex-1 p-[5%] justify-end">
+                <div className="flex flex-col p-[5%] justify-end">
                     <p>{props.about}</p>
                 </div>
             </Tile>
@@ -24,13 +26,15 @@ export default function About(props : {about : string}){
             <Tile 
                 title="Education"
                 disableHover={true}
+                childClassName="mt-0! flex h-full justify-evenly"
+                className="p-[5%] sm:p-[2%]"
             >
                 <img 
                     src="/images/tmu.png"
                     alt="School Logo"
                     className="max-w-[75%] p-[5%] self-center"
                 />
-                <div className="flex flex-col flex-1 p-[5%] justify-end">
+                <div className="flex flex-col p-[5%] justify-end">
                     <p><b>School:</b> Toronto Metropolitan University</p>
                     <p><b>Major:</b> Sports Media</p>
                     <p><b>Level:</b> 3rd year</p>
