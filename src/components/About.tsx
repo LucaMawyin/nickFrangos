@@ -1,48 +1,33 @@
 import Tile from '@/components/Tile'
 import ReactMarkdown from "react-markdown";
+import Title from './Title';
 
 export default function About(props : {about : string}){
     
     return (
-        <div className="box-border
-            flex flex-row flex-wrap 
-            justify-evenly 
-            gap-y-[5vh] py-[5vh] min-h-[90vh]">
+        <div className="flex flex-col justify-evenly min-h-[80vh] p-[5%]">
 
-            <Tile 
-                title="About Me"
-                disableHover={true}
-                childClassName="mt-0! flex h-full justify-evenly"
-                className="p-[5%] sm:p-[2%]"
-            >
-                <img 
-                    src="/images/headshot.jpg" 
-                    alt="Headshot"
-                    className="max-w-[75%] p-[5%] self-center"/>
-                <div className="flex flex-col p-[5%] justify-end">
-                    <div className="mb-8 whitespace-pre-line">
+            <div className="flex flex-wrap gap-8">
+
+                {/* IMAGE */}
+                <div className="w-[30%] min-w-75 mx-auto md:mx-0">
+                    <Title text="About Me" className="pb-8 mx-auto text-[10em]"/>
+                    <img 
+                        src="/images/commentating.jpg" 
+                        alt="Headshot"
+                        className="w-full sm:max-w-[70%] h-auto mx-auto object-cover rounded-xl"
+                    />                           
+                </div>
+                {/* TEXT*/}
+                <div className="m-auto w-[40%] min-w-75">
+                    <div className="whitespace-pre-line text-xl font-normal text-center sm:text-start">
                         <ReactMarkdown>{props.about}</ReactMarkdown>
                     </div>
                 </div>
-            </Tile>
+            </div>
 
-            <Tile 
-                title="Education"
-                disableHover={true}
-                childClassName="mt-0! flex h-full justify-evenly"
-                className="p-[5%] sm:p-[2%]"
-            >
-                <img 
-                    src="/images/tmu.png"
-                    alt="School Logo"
-                    className="max-w-[75%] p-[5%] self-center"
-                />
-                <div className="flex flex-col p-[5%] justify-end">
-                    <p><b>School:</b> Toronto Metropolitan University</p>
-                    <p><b>Major:</b> Sports Media</p>
-                    <p><b>Level:</b> 3rd year</p>
-                </div>
-            </Tile>
+
+
         </div>
     );
 }
