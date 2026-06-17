@@ -1,11 +1,19 @@
+"use client";
+
 
 import { links } from "@/lib/links";
+import { usePathname } from "next/navigation";
 
 function capitalize(name: string) {
   return name.charAt(0).toUpperCase() + name.slice(1);
 }
 
 export default function Footer() {
+  const pathname = usePathname();
+
+  if (pathname.startsWith("/settings")) {
+    return null;
+  }
   return (
     <footer className="w-full py-4 flex flex-col items-center gap-3 text-sm text-gray-500">
       

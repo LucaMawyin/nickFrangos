@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 
-export default function NavLink(props: { title: string; link: string }){
+export default function NavLink(props: { title: string; link: string; newTab : boolean }){
 
     const pathName = usePathname();
     const router = useRouter();
@@ -40,6 +40,8 @@ export default function NavLink(props: { title: string; link: string }){
     return (
         <Link 
             href={props.link} 
+            target={props.newTab ? "_blank" : undefined}
+            rel={props.newTab ? "noopener noreferrer" : undefined}
             onClick={handleClick} 
             className="relative text-xl
             after:content-[''] after:absolute after:left-0 after:-bottom-1

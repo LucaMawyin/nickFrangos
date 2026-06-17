@@ -4,6 +4,7 @@ export default function Tile(props : {
     children?: React.ReactNode, 
     className?: string, 
     titleClassName?: string, 
+    childClassName?:string,
     disableHover?: boolean
 }){
     return (
@@ -22,16 +23,21 @@ export default function Tile(props : {
             transition-all duration-(--transition-time) ease-out
             ${props.disableHover? "" : "hover:shadow-2xl hover:-translate-y-2"}
             ${props.className??""}`}>
-            <h1 
-                className={`
-                    ${props.titleClassName?.includes("text-") ? "" : "text-[3em]" } 
-                    ${props.titleClassName}`
-                }
-            >
-                {props.title}
-            </h1>
 
-            <div className="mt-auto flex flex-col">
+            {/* Title */ }
+            {props.title && 
+                <h1 
+                    className={`
+                        ${props.titleClassName?.includes("text-") ? "" : "text-[3em]!" } 
+                        ${props.titleClassName}`
+                    }
+                >
+                    {props.title}
+                </h1>                
+            }
+
+            {/* Tile content */}
+            <div className={`mt-auto flex flex-col ${props.childClassName}`}>
                 {props.children}
             </div>
             

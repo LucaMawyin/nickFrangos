@@ -38,7 +38,7 @@ export default function NavBarClient(
                 h-[10vh]
                 fixed top-0 z-50 w-screen"
             >
-                <NavLink title="Nicholas" link="/" />
+                <NavLink title="Nicholas" link="/" newTab={false} />
                 <nav className="flex gap-6">
                     {props.pageList.map((page) => (
                         (!page.requireLogin || props.isLoggedIn) && 
@@ -48,6 +48,7 @@ export default function NavBarClient(
                                 key={page.href}
                                 title={capitalize(page.title)}
                                 link={`/${page.href}`}
+                                newTab={page.newTab}
                             />
                         )
                     ))}
@@ -68,6 +69,7 @@ export default function NavBarClient(
                 <NavLink
                     title="Nicholas"
                     link="/"
+                    newTab={false}
                 />     
                 <button 
                     className="
@@ -126,6 +128,7 @@ export default function NavBarClient(
                             <NavLink 
                                 title={capitalize(page.title)}
                                 link={`/${page.href}`}
+                                newTab={page.newTab}
                             />
                         </div>
                     )

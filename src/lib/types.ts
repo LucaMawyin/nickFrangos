@@ -2,6 +2,7 @@ export type Page = {
     title:string;
     href:string;
     requireLogin : boolean;
+    newTab:boolean,
 }
 
 export type User = {

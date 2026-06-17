@@ -40,3 +40,7 @@ CREATE TABLE login_verifications (
     user_agent TEXT,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+CREATE TABLE site_content (
+    id INTEGER PRIMARY KEY autoincrement,
+    about TEXT
+);

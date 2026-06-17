@@ -1,6 +1,6 @@
 import Tile from '@/components/Tile'
 
-export default function About(){
+export default function About(props : {about : string}){
     
     return (
         <div className="box-border
@@ -8,18 +8,23 @@ export default function About(){
             justify-evenly 
             gap-y-[5vh] py-[5vh] min-h-[90vh]">
 
-            <Tile title="About Me">
+            <Tile 
+                title="About Me"
+                disableHover={true}
+            >
                 <img 
                     src="/images/headshot.jpg" 
                     alt="Headshot"
                     className="max-w-[75%] p-[5%] self-center"/>
                 <div className="flex flex-col flex-1 p-[5%] justify-end">
-                    <p><b>Name:</b> Nicholas</p>
-                    <p><b>Interests:</b> Sports</p>
+                    <p>{props.about}</p>
                 </div>
             </Tile>
 
-            <Tile title="Education">
+            <Tile 
+                title="Education"
+                disableHover={true}
+            >
                 <img 
                     src="/images/tmu.png"
                     alt="School Logo"

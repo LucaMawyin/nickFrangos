@@ -39,6 +39,11 @@ export default function Login(props : {isLoggedIn : boolean}){
             return;
         }
 
+        if (!response.ok) {
+            setError(data.error || "Login failed");
+            return;
+        }
+
         if (data.status === "verification_required") {
 
             router.push(
@@ -46,16 +51,6 @@ export default function Login(props : {isLoggedIn : boolean}){
             );
             return;
         } 
-        
-        if (data.status === "error") {
-            setError(data.error || "Login failed");
-            return;
-        }
-
-        if (data.status === "success"){
-            router.push(next);
-        }
-
     }
 
     if (props.isLoggedIn){

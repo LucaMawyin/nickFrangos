@@ -54,9 +54,16 @@
 			"remote": true
 		}
 	],
-	"vars":{
-		"NEXT_PUBLIC_APP_URL" : "https://nicholasfrangos.com"
-	}
+	"vars": {
+		"NEXT_PUBLIC_APP_URL": "https://nicholasfrangos.com"
+	},
+	"r2_buckets": [
+		{
+			"bucket_name": "nicholas-bucket",
+			"binding": "nicholas_bucket",
+			"remote": true
+		}
+	]
 	/**
 	 * Smart Placement
 	 * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
