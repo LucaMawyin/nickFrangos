@@ -6,6 +6,7 @@ import DeleteButton from "@/components/DeleteButton";
 import EditButton from "@/components/EditButton";
 import Link from "next/link";
 import LocalDateTime from "@/components/LocalDateTime";
+import ReactMarkdown from "react-markdown";
 
 export default async function ArticlePage({
   params,
@@ -60,8 +61,11 @@ export default async function ArticlePage({
 
             </p>
 
-            <div className="mt-6 whitespace-pre-wrap">
-                {article.content}
+            <div className="mt-6 whitespace-pre-wrap font-normal">
+                <ReactMarkdown>
+                    {article.content}
+                </ReactMarkdown>
+                
             </div>
 
             <div className="flex justify-center mt-10">

@@ -1,4 +1,3 @@
-import Tile from '@/components/Tile'
 import ReactMarkdown from "react-markdown";
 import Title from './Title';
 

@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { LoginResponse } from "@/lib/types";
+import { Article, LoginResponse } from "@/lib/types";
 import Tile from "@/components/Tile"
 import Button from "@/components/Button";
 import resizeImage from "@/lib/resizeImage";
@@ -131,14 +131,15 @@ export default function CreateClient(props : {title:string; initialData? : any})
       body:formData,
     });
 
+    const data = await response.json() as Article;
+
     // Successful publish reroutes to articles
     if (response.ok) {
       setError(null);
 
       // Redirect to page of article when published
-      const slug = props.initialData?.slug;
-      if (mode === "publish") {
-        router.push(`/articles/read/${slug}`);
+      if (mode === "publish" && data?.slug) {
+        router.push(`/articles/read/${data.slug}`);
       } 
 
       // Saving as draft
@@ -229,13 +230,13 @@ export default function CreateClient(props : {title:string; initialData? : any})
               required
             />
             <div className="flex justify-between">
-              <label htmlFor="content">Content</label>
+              <label htmlFor="content">Content (Markdown)</label>
               <p className="text-gray-500">Word count: {wordCount}</p>
             </div>
             
             <textarea 
               id="content" 
-              className="min-h-75"
+              className="min-h-75 font-normal placeholder:font-medium"
               name="content" 
               value={content}
               onChange={(e) => setContent(e.target.value)}
