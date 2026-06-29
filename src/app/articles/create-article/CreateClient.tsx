@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Article, LoginResponse } from "@/lib/types";
 import Tile from "@/components/Tile"
 import Button from "@/components/Button";
@@ -79,126 +79,179 @@ export default function CreateClient(props : {title:string; initialData? : any})
     setPreview(URL.createObjectURL(finalFile));
   };
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>){
-    e.preventDefault();
+    const pathname = usePathname()
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>){
+        e.preventDefault();
 
-    const submitter = (
-      e.nativeEvent as SubmitEvent
-    ).submitter as HTMLButtonElement;
+        const submitter = (
+            e.nativeEvent as SubmitEvent
+        ).submitter as HTMLButtonElement;
 
-    const mode = submitter.value as "draft" | "publish";
+        const mode = submitter.value as "draft" | "publish";
 
-    // User wants to publish but there is no image
-    if (mode === "publish" && !imageFile && !props.initialData?.imageUrl) {
-      setError("Image required for publishing");
-      setFadeOut(false);
+        // User wants to publish but there is no image
+        if (mode === "publish" && !imageFile && !props.initialData?.imageUrl) {
+            setError("Image required for publishing");
+            setFadeOut(false);
 
-      // force reflow cycle
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          setFadeOut(true);
-        }, 2000);
+            // force reflow cycle
+            requestAnimationFrame(() => {
+                    setTimeout(() => {
+                    setFadeOut(true);
+                }, 2000);
 
-        setTimeout(() => {
-          setError(null);
-          setFadeOut(false);
-        }, 3000);
-      });
+                setTimeout(() => {
+                    setError(null);
+                    setFadeOut(false);
+                }, 3000);
+            });
 
-      return;
-    }
-
-    // Data stored in one object
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("content", content);
-    formData.append("mode", mode);
-    
-
-    // If we already have an id we will add it to form
-    if (props.initialData?.id) {
-      formData.append("id", props.initialData.id);
-    }
-
-    // If we already have image we add it to form
-    if (imageFile) { 
-      formData.append("image", imageFile);
-      formData.append("imageType", imageFile.type);
-    }
-
-    const response = await fetch("/api/articles", {
-      method:"POST",
-      body:formData,
-    });
-
-    const data = await response.json() as Article;
-
-    // Successful publish reroutes to articles
-    if (response.ok) {
-      setError(null);
-
-      // Redirect to page of article when published
-      if (mode === "publish" && data?.slug) {
-        router.push(`/articles/read/${data.slug}`);
-      } 
-
-      // Saving as draft
-      else if (mode === "draft") {
-
-        // We are saving an already published article i.e. unpublishing
-        if (props.initialData?.is_published) {
-          router.push("/articles");
-          return;
+            return;
         }
 
-        setSaveDraft(true);
-        setFadeOut(false);
+        // Data stored in one object
+        const formData = new FormData();
+        formData.append("title", title);
+        formData.append("content", content);
+        formData.append("mode", mode);
+        
 
-        requestAnimationFrame(() => {
+        // If we already have an id we will add it to form
+        if (props.initialData?.id) {
+            formData.append("id", props.initialData.id);
+        }
 
-          setTimeout(() => {
-            setFadeOut(true);
-          }, 2000);
+        // If we already have image we add it to form
+        if (imageFile) { 
+            formData.append("image", imageFile);
+            formData.append("imageType", imageFile.type);
+        }
 
-          setTimeout(() => {
-            setSaveDraft(false);
-            setFadeOut(false);
-          }, 3000);     
-
+        const response = await fetch("/api/articles", {
+            method:"POST",
+            body:formData,
         });
 
-      }
+        let data: any = null;
 
-      else {
-        router.push("/articles");
-      }
+        try {
+            data = await response.json();
+        }
+        catch{
+            data = null;
+        }
+
+        // Successful publish reroutes to articles
+        if (response.ok) {
+            setError(null);
+
+            data = data as Article;
+
+            // Redirect to page of article when published
+            if (mode === "publish" && data?.slug) {
+                router.push(`/articles/read/${data.slug}`);
+            } 
+
+            // Saving as draft
+            else if (mode === "draft") {
+                
+                // We are saving an already published article i.e. unpublishing
+                if (props.initialData?.is_published) {
+                    router.push("/articles");
+                    return;
+                }
+
+                else if (pathname == "/articles/create-article/create-new-article"){
+                    router.push("/articles/create-article");
+                    return;
+                }
+
+                setSaveDraft(true);
+                setFadeOut(false);
+
+                requestAnimationFrame(() => {
+
+                    setTimeout(() => {
+                        setFadeOut(true);
+                    }, 2000);
+
+                    setTimeout(() => {
+                        setSaveDraft(false);
+                        setFadeOut(false);
+                    }, 3000);     
+
+                });
+
+            }
+
+            else {
+                console.log("HERE")
+                router.push("/articles");
+                return;
+            }
+        }
+
+        // Somehow access is gained but not logged in
+        else if (response.status == 401){
+            router.push("/login");
+        }
+
+        else if (response.status == 409){
+
+            console.log(data.error);
+                        
+            setFadeOut(false);
+            setError(data.error || "Failed to create article");
+
+            requestAnimationFrame(() => {
+                    setTimeout(() => {
+                    setFadeOut(true);
+                }, 2000);
+
+                setTimeout(() => {
+                    setError(null);
+                    setFadeOut(false);
+                }, 3000);
+            });           
+        }
+
+        // Default
+        else {
+            try{
+                setFadeOut(false);
+                setError(data.error || "Failed to create article");
+
+                requestAnimationFrame(() => {
+                        setTimeout(() => {
+                        setFadeOut(true);
+                    }, 2000);
+
+                    setTimeout(() => {
+                        setError(null);
+                        setFadeOut(false);
+                    }, 3000);
+                });            
+            }catch(err) {
+                setFadeOut(false);
+                const message = err instanceof Error ? err.message : "Failed to create article";
+
+                setError(message);
+
+                requestAnimationFrame(() => {
+                        setTimeout(() => {
+                        setFadeOut(true);
+                    }, 2000);
+
+                    setTimeout(() => {
+                        setError(null);
+                        setFadeOut(false);
+                    }, 3000);
+                });     
+            }
+
+        }
+
     }
-
-    // Somehow access is gained but not logged in
-    else if (response.status == 401){
-      router.push("/login");
-    }
-
-    // Default
-    else {
-      const data = await response.json() as LoginResponse;
-
-      setFadeOut(false);
-      setError(data.error || "Failed to create article");
-
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          setFadeOut(true);
-        }, 2000);
-
-        setTimeout(() => {
-          setError(null);
-          setFadeOut(false);
-        }, 3000);
-      });
-    }
-
-  }
 
   return (
     <div 

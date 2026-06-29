@@ -1,24 +1,9 @@
-import { headers } from "next/headers";
 import { Article as ArticleType } from "@/lib/types";
 import ArticleFeed from "./ArticleFeed";
+import { getArticles } from "@/lib/getArticles";
 
-export default async function Article(){
-    
-    const h = await headers();
-    const host = h.get("host");
+export default async function Article() {
+  const articles: ArticleType[] = await getArticles();
 
-    const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
-
-    const response = await fetch(
-        `${protocol}://${host}/api/articles?limit=8&offset=0`,
-        { cache: "no-store" }
-    );
-
-    const data: {articles? : ArticleType[]} = await response.json();
-
-    const articles = data.articles ?? [];
-
-    return (
-        <ArticleFeed articles={articles} />
-    );
+  return <ArticleFeed articles={articles} />;
 }

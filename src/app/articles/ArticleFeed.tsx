@@ -12,7 +12,7 @@ export default function ArticleFeed(props : {articles : Article[]}){
     const [hasMore, setHasMore] = useState(true);
     const loaderRef = useRef<HTMLDivElement | null>(null);
 
-        async function loadMore(){
+    async function loadMore(){
 
         if (loading || !hasMore) return;
 
@@ -94,9 +94,9 @@ export default function ArticleFeed(props : {articles : Article[]}){
                                 className="max-w-full min-w-0 h-full w-full p-[5%]"
                                 titleClassName="text-[clamp(2rem,2.5vw,2.25rem)]"
                             >
-                                {article.image_type && (
+                                {article.image && (
                                     <img
-                                        src={`/api/articles/image/${article.id}?v=${String(article.updated_at)}`}
+                                        src={article.image}
                                         alt={article.title}
                                         className="w-full mt-4"
                                     />

@@ -39,13 +39,14 @@ export type Article = {
   id: number;
   title : string;
   content : string;
-  image : Buffer | null;
+  image : string | null;
   image_type : string;
   slug : string;
   created_at: string;
   updated_at:string;
   published_at:string;
 };
+
 
 export type ArticleResponse = {
   articles : Article[]

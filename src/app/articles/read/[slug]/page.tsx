@@ -7,6 +7,7 @@ import EditButton from "@/components/EditButton";
 import Link from "next/link";
 import LocalDateTime from "@/components/LocalDateTime";
 import ReactMarkdown from "react-markdown";
+import { getImageDataUrl } from "@/lib/r2";
 
 export default async function ArticlePage({
   params,
@@ -27,6 +28,8 @@ export default async function ArticlePage({
     if (!article) {
         return <h1 className="p-10">Article not found</h1>;
     }
+
+    article.image = await getImageDataUrl(`${article.id}`);
     
     return (
         <div className="
@@ -44,9 +47,9 @@ export default async function ArticlePage({
                 &lt; Back to Articles
             </Link>
 
-            {article.image_type && (
+            {article.image && (
                 <img
-                    src={`/api/articles/image/${article.id}?v=${article.updated_at}`}
+                    src={article.image}
                     alt={article.title}
                     className="w-full h-auto rounded-lg mb-6 object-cover"
                 />

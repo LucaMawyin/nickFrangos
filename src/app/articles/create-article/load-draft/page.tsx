@@ -1,6 +1,7 @@
 import { getDB } from "@/lib/db";
 import CreateClient from "../CreateClient";
 import { redirect } from "next/navigation";
+import { getImageDataUrl } from "@/lib/r2";
 
 export default async function Page({
   searchParams,
@@ -33,9 +34,8 @@ export default async function Page({
 
   let imageUrl = null;
 
-  if (data?.image) {
-    const base64 = Buffer.from(data.image as any).toString("base64");
-    imageUrl = `data:${data.image_type};base64,${base64}`;
+  if (data?.image_type) {
+    imageUrl = await getImageDataUrl(String(id));
   }
 
   return (
