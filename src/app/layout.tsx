@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="min-h-screen flex flex-col">
+      <body>
         <NavBar pageList={pages}/>
         <div className="pt-[10vh] flex-1 flex flex-col">
           {children}

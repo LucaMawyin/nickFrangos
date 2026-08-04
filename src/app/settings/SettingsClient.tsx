@@ -1,32 +1,41 @@
 "use client";
 
 import Button from "@/components/Button";
+import DeleteButton from "@/components/DeleteButton";
 import Tile from "@/components/Tile";
-import { ChangePasswordResponse, User } from "@/lib/types";
+import { getDevice } from "@/lib/getDevice";
+import { ChangePasswordResponse, Session, SiteContent, User } from "@/lib/types";
+import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 
 type Message = {
     text: string;
     status: "error" | "success";
-    type : "about" | "password" | "resume";
+    type : "about" | "password" | "resume" | "sessions" | "headshot";
 } | null;
 
 function getMessageClass(message?: Message) {
     if (!message) return "";
 
-    if (message.status === "error") return "text-red-500";
-    if (message.status === "success") return "text-green-500";
+    if (message.status === "error") return "text-red-500!";
+    if (message.status === "success") return "text-green-500!";
 
     return "";
 }
 
-export default function SettingsClient(props : {user : User, about : string}){
+export default function SettingsClient(props : {
+    user : User, 
+    content : SiteContent,
+    activeSessions : Session[],
+    currentSession : Session,
+}){
+
+    const router = useRouter();
 
     // Resume file input stuff
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [ resumeName, setResumeName] = useState<string | null>(null);
     const [ resumeFile, setResumeFile] = useState<File | null>(null);
-
 
     // Password states
     const [showPassword, setShowPassword] = useState(false);
@@ -39,7 +48,7 @@ export default function SettingsClient(props : {user : User, about : string}){
     const [visible, setVisible] = useState(true);
 
     // About me
-    const [ about, setAbout ] = useState(props.about || "");
+    const [ about, setAbout ] = useState(props.content.about || "");
 
     useEffect(() => {
         const resizeTextAreas = () => {
@@ -177,7 +186,10 @@ export default function SettingsClient(props : {user : User, about : string}){
         // Uploading file
         const formData = new FormData();
         formData.append("file", resumeFile);
-        const res = await fetch("/api/upload-resume", {
+        formData.append("name", "resume");
+        formData.append("type", "pdf");
+
+        const res = await fetch("/api/upload-file", {
             method: "POST",
             body: formData,
         });
@@ -223,7 +235,6 @@ export default function SettingsClient(props : {user : User, about : string}){
     // Updating about me
     async function handleAboutSubmit() {
 
-        // Require bio to have text
         if (!about.length){
             setMessage({
                 type:"about",
@@ -248,6 +259,7 @@ export default function SettingsClient(props : {user : User, about : string}){
 
         const data = await res.json() as any;
 
+        // Error
         if (!res.ok) {
             setMessage({
                 type:"about", 
@@ -259,6 +271,8 @@ export default function SettingsClient(props : {user : User, about : string}){
                 setVisible(false);
                 setTimeout(() => setMessage(null), 300);
             }, 3000);
+
+            router.refresh();
             return;
         }
 
@@ -275,17 +289,98 @@ export default function SettingsClient(props : {user : User, about : string}){
         }, 3000);
     }
 
+    // Clearing all active sessions
+    async function handleClearSessions(){
+        const res = await fetch("/api/clear-sessions", {
+            method: "POST",
+        });
+
+        const data = await res.json() as any;
+
+        // Error
+        if (!res.ok) {
+            setMessage({
+                type:"sessions",
+                status: "error",
+                text: data.error || "Failed to Clear Sessions",
+            });
+            setVisible(true);
+                setTimeout(() => {
+                setVisible(false);
+                setTimeout(() => setMessage(null), 300);
+            }, 3000);
+            return;
+        }
+
+        router.refresh();
+
+        // Success message
+        setMessage({
+            type:"sessions",
+            status: "success",
+            text: "Successfully cleared all active sessions",
+        });
+        setVisible(true);
+            setTimeout(() => {
+            setVisible(false);
+            setTimeout(() => setMessage(null), 300);
+        }, 3000);
+    }
+
+    // Removing individual session
+    async function handleRemoveSession(id: number) {
+        const res = await fetch("/api/remove-session", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id }),
+        });
+
+        const data = await res.json() as any;
+
+        if (!res.ok) {
+            setMessage({
+                type: "sessions",
+                status: "error",
+                text: data.error || "Failed to remove session",
+            });
+            setVisible(true);
+
+            setTimeout(() => {
+                setVisible(false);
+                setTimeout(() => setMessage(null), 300);
+            }, 3000);
+
+            return;
+        }
+
+        await router.refresh();
+
+        setMessage({
+            type: "sessions",
+            status: "success",
+            text: "Successfully removed session",
+        });
+        setVisible(true);
+
+        setTimeout(() => {
+            setVisible(false);
+            setTimeout(() => setMessage(null), 300);
+        }, 3000);
+    }
+
     return (
         <div className="
             min-h-[90vh]
-            flex justify-center items-center
+            flex flex-wrap justify-center items-center
         ">
             <div
                 className="
                     flex flex-wrap
                     justify-center
                     w-full
-                    max-h-fit
+                    min-h-[90vh]
                 "
             >
 
@@ -293,48 +388,19 @@ export default function SettingsClient(props : {user : User, about : string}){
                 <Tile 
                     title="Profile Settings"
                     disableHover={true}
-                    className="lg:max-w-[40vw] max-w-full justify-between shadow-none"
-                    childClassName="mt-0!"
+                    className="lg:max-w-[40vw] shadow-none pb-0"
+                    childClassName="mt-0! justify-center"
                     titleClassName="border-b"
                 >
 
-                    {/* INFO */}
-                    <div className="space-y-4 pb-6 border-b">
-                        <h2 className="text-xl">
-                            User Information
-                        </h2>
-                        
-                        <div className="flex flex-col">
-                            <span className="text-gray-500">First Name</span>
-                            <span>
-                                {props.user.first_name}
-                            </span>
-                        </div>
-
-                        <div className="flex flex-col">
-                            <span className=" text-gray-500">Last Name</span>
-                            <span>
-                                {props.user.last_name}
-                            </span>
-                        </div>
-
-                        <div className="flex flex-col gap-1">
-                            <span className="text-gray-500">
-                                Email
-                            </span>
-                            <span>
-                                {props.user.email}
-                            </span>
-                        </div>
-                    </div>
-
                     {/* ABOUT ME */}
-                    <div className="space-y-4 pt-6">
+                    <div className="space-y-4 py-6 border-b">
                         <h2 className="text-xl">
                             About Me
                         </h2>
                         <div className="flex flex-col gap-2">
                             <textarea
+                                name="about-me"
                                 value={about}
                                 className="
                                     w-full
@@ -380,24 +446,11 @@ export default function SettingsClient(props : {user : User, about : string}){
                                 onClick={handleAboutSubmit}
                             />                            
                         </div>
-
-
                     </div>
-
-                </Tile>
-
-                {/* RESUME & PASSWORD */}
-                <Tile
-                    className="lg:max-w-[40vw] max-w-full justify-between shadow-none"
-                    disableHover={true}
-                >
-
+                    
                     {/* RESUME UPLOAD */}
                     <div 
-                        className="
-                            py-6
-                            border-b
-                        "
+                        className="py-6 border-b sm:border-b-0"
                         onDragOver={(e) => {e.preventDefault()}}
                         onDrop={handleResumeDrop}
                     >
@@ -412,6 +465,7 @@ export default function SettingsClient(props : {user : User, about : string}){
                             <label htmlFor="resume" className="text-gray-500">Drag & drop resume here, or click to select</label>
                             <div className="space-y-2">
                                 <input
+                                    id="resume"
                                     name="resume"
                                     type="file"
                                     ref={fileInputRef}
@@ -462,8 +516,17 @@ export default function SettingsClient(props : {user : User, about : string}){
 
                     </div>
 
+                </Tile>
+
+                {/* SECURITY */}
+                <Tile
+                    className="lg:max-w-[40vw] shadow-none pb-0"
+                    disableHover={true}
+                    childClassName="mt-0! flex-1 justify-center"
+                >
+
                     {/* Change password section */}
-                    <div className="pt-6 space-y-4">
+                    <div className="space-y-4 pb-6 border-b">
                         <h2 className="text-xl">
                             Change Password
                         </h2>
@@ -504,7 +567,7 @@ export default function SettingsClient(props : {user : User, about : string}){
                                 <input
                                     id="new-password"
                                     type={showPassword ? "text" : "password"}
-                                    name="password"
+                                    name="new-password"
                                     className="flex-1"
                                     value={newPassword}
                                     onChange={(e) => setNewPassword(e.target.value)}
@@ -521,13 +584,14 @@ export default function SettingsClient(props : {user : User, about : string}){
                                 <input
                                     id="confirm-new-password"
                                     type={showPassword ? "text" : "password"}
-                                    name="password"
+                                    name="confirm-new-password"
                                     className="flex-1"
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
                                     required
                                 />
                             </div>
+
                             {/* Message area */}
                             <div className="space-y-2">
                                 <p   
@@ -554,8 +618,133 @@ export default function SettingsClient(props : {user : User, about : string}){
                         </div>
                         
                     </div>
+
+                    {/* Active sessions */}
+                    <div className="py-6">
+                        <h2 className="text-xl mb-4">
+                            Active Sessions
+                        </h2>
+                        <div className="space-y-2 [&_span]:text-gray-500">
+                            {props.activeSessions.map((session : Session) => (
+                                <details 
+                                    key={session.id} 
+                                    className="
+                                        bg-gray-100 
+                                        rounded-lg 
+                                        wrap-break-word 
+                                    "
+                                >
+                                    <summary className="
+                                        cursor-pointer 
+                                        font-medium
+                                        flex
+                                        items-center
+                                        justify-between
+                                        p-3
+                                        rounded-lg 
+
+                                        hover:bg-gray-300
+                                        transition-colors
+                                        duration-300
+                                    ">
+                                        <div>
+                                            <p>
+                                                {getDevice(session.user_agent)}
+                                            </p>
+                                            <p className="text-sm text-gray-500">
+                                                Session {session.id}
+                                            </p>
+                                        </div>
+                                        
+                                        {props.currentSession.id === session.id && (
+                                            <span className="
+                                                text-sm
+                                                text-gray-500
+                                                bg-gray-200
+                                                px-2
+                                                py-1
+                                                rounded-full
+                                            ">
+                                                Current
+                                            </span>
+                                        )}
+                                    </summary>
+
+                                    <div className="space-y-1 p-3 pt-0">
+                                        <p><span>Device: </span>{getDevice(session.user_agent)}</p>
+                                        <p><span>IP Address: </span>{session.ip_address}</p>
+                                        <p>
+                                            <span>Location: </span>
+                                            {(() => {
+                                                try {
+                                                    const geo = JSON.parse(session.geo);
+                                                    return `${geo.city}, ${geo.country}`;
+                                                } catch {
+                                                    return session.geo;
+                                                }
+                                            })()}
+                                        </p>
+                                        <p>
+                                            <span>Created: </span>
+                                            {new Date(session.created_at.replace(" ", "T") + "Z").toLocaleString("en-US", {
+                                                year: "numeric",
+                                                month: "short",
+                                                day: "numeric",
+                                                hour: "numeric",
+                                                minute: "2-digit",
+                                            })}
+                                        </p>
+                                        <p>
+                                            <span>Expires: </span>
+                                            {new Date(session.expires_at.replace(" ", "T") + "Z").toLocaleString("en-US", {
+                                                year: "numeric",
+                                                month: "short",
+                                                day: "numeric",
+                                                hour: "numeric",
+                                                minute: "2-digit",
+                                            })}
+                                        </p>       
+                                        {props.currentSession.id !== session.id && (
+                                            <DeleteButton
+                                                customText="Remove"
+                                                customDescription=" Session"
+                                                className="flex justify-center py-0! px-2! min-h-fit w-full sm:w-fit"
+                                                action={() => handleRemoveSession(session.id)}
+                                            />
+                                        )}                              
+                                    </div>
+                                    
+     
+
+                                </details>
+                            ))}
+                            <p   
+                                className={`
+                                    text-sm text-center min-h-5
+                                    transition-opacity duration-300
+                                    ${visible ? "opacity-100" : "opacity-0"}
+                                `}
+                            >
+                                {message?.type === "sessions" && (
+                                    <span className={getMessageClass(message)}>
+                                        {message.text}
+                                    </span>
+                                )}
+                            </p>
+                            <DeleteButton
+                                customText="Clear"
+                                customDescription="Sessions"
+                                className="w-full sm:w-56"
+                                action={handleClearSessions}
+                            />                             
+                        </div>
+
+                    </div>
                 </Tile>
+
+
             </div>
+
         </div>
     );
 }

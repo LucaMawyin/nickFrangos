@@ -6,10 +6,12 @@ import Title from "@/components/Title"
 import Button from "@/components/Button"
 import Icon from "@/components/Icon";
 import About from "@/components/About";
-import { YouTubeResponse } from "@/lib/types";
+import { SiteContent, YouTubeResponse } from "@/lib/types";
 import { links } from "@/lib/links";
 
-export default function Home(props : {about : string}) {
+export default function Home(props : {
+    content : SiteContent,
+}) {
 
   const [loaded, setLoaded] = useState(false);
   const [videoId, setVideoId] = useState<string | null>(null);
@@ -118,7 +120,7 @@ export default function Home(props : {about : string}) {
 
       {/* ABOUT ME */}
       <section id="about">
-        <About about={props.about}/>
+        <About about={props.content.about}/>
       </section>
 
       <section 

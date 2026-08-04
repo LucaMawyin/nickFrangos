@@ -1,8 +1,7 @@
-import getContent from "@/lib/getContent";
+import { getContent } from "@/lib/getContent";
 import HomeClient from "./HomeClient";
 
 export default async function Page() {
-  const about = await getContent();
-
-  return <HomeClient about={about} />;
+    const content = await getContent();
+    return <HomeClient content={content} />;
 }

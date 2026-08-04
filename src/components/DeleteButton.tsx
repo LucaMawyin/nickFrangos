@@ -3,24 +3,34 @@
 import Button from "@/components/Button";
 import { useEffect, useState, useTransition } from "react";
 import Tile from "./Tile";
+import { createPortal } from "react-dom";
 
 export default function DeleteButton({
-  action,
-  className = "",
+    action,
+    className = "",
+    disabled= false,
+    text="",
+    customText="",
+    customDescription="",
 }: {
-  action: () => void;
-  className?: string;
+    action: () => void;
+    className?: string;
+    disabled?: boolean;
+    text?:string;
+    customText?:string;
+    customDescription?:string;
 }) {
-
-    const [open, setOpen] = useState(false);
+    
+    // Handle delete action with transition
     const [isPending, startTransition] = useTransition();
-
     const handleDelete = () => {
         startTransition(async () => {
             await action();
         });
     };
 
+    // Prevent background scrolling on confirmation dialog
+    const [open, setOpen] = useState(false);
     useEffect(() => {
         if (open) {
             document.body.style.overflow = "hidden";
@@ -36,23 +46,30 @@ export default function DeleteButton({
     return (
         <>
             <Button
-                text="Delete Article"
+                text={customText ? `${customText} ${customDescription ? customDescription : ""}` : `Delete`}
                 type="button"
-                className="bg-red-600 hover:bg-red-700"
+                disabled={disabled}
+                className={`bg-red-600 hover:bg-red-700 ${className}`}
                 onClick={() => setOpen(true)}
             />
-            {open && (
+
+            {/* Confirmation dialog */}
+            {open && createPortal(
                 <div 
                     className="
-                    fixed inset-0 
-                    bg-black/50 
-                    flex items-center justify-center
-                    z-50"
+                        fixed inset-0
+                        bg-black/50
+                        flex items-center justify-center
+                        z-60
+                    "
+                    onClick={() => setOpen(false)}
                 >
+                    
                     <Tile 
-                        title="Delete article?" 
+                        title={customText ? `${customText} ${customDescription}?` : `Delete ${customText ? customText : text}?`} 
                         className="bg-white p-[5%] rounded shadow-md max-w-full sm:max-w-fit sm:p-[2%]"
                         disableHover={true}
+                        onClick={(e) => e.stopPropagation()}
                     >
 
                         <p className="text-sm text-gray-600 mb-6 mt-4">
@@ -71,7 +88,7 @@ export default function DeleteButton({
                                 
                             </Button>
                             <Button
-                                text="Delete"
+                                text={customText ? customText : "Delete"}
                                 className="bg-red-600 hover:bg-red-700"
                                 onClick={() => {
                                     setOpen(false);
@@ -83,7 +100,7 @@ export default function DeleteButton({
                             </Button>
                         </div>
                     </Tile>
-                </div>
+                </div>, document.body
             )}
         </>
     );

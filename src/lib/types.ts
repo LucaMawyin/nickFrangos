@@ -5,6 +5,10 @@ export type Page = {
     newTab:boolean,
 }
 
+export type SiteContent = {
+    [key: string]: string;
+};
+
 export type User = {
     id: number;
     email: string;
@@ -44,11 +48,14 @@ export type LoginVerification = {
 };
 
 export type Session = {
-  id: number;
-  user_id: number;
-  token: string;
-  created_at: string;
-  expires_at: string;
+    id: number;
+    token: string;
+    user_id: number;
+    created_at : string;
+    expires_at: string;
+    ip_address : string;
+    geo : string;
+    user_agent : string;
 };
 
 export type ChangePasswordBody = {

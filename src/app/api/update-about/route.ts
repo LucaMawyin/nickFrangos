@@ -27,10 +27,14 @@ export async function POST(req: Request) {
         // Updating
         const db = await getDB();
         await db
-            .prepare("UPDATE site_content SET about = ? WHERE id = 1")
+            .prepare(`
+                UPDATE site_content
+                SET content = ? 
+                WHERE key = 'about'
+            `)
             .bind(about)
             .run();
-
+        
         return Response.json({ success: true });
     } 
     
