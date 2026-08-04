@@ -6,30 +6,55 @@ export type Page = {
 }
 
 export type User = {
-  id: number;
-  email: string;
-  password: string;
-  firstName : string;
-  lastName : string;
-  createdAt : string; 
-  emailVerified : boolean;
+    id: number;
+    email: string;
+    password: string;
+    first_name : string;
+    last_name : string;
+    created_at : string; 
+    failed_attempts : number;
+    locked_until : string;
 };
 
 export type LoginBody = {
-  email: string;
-  password: string;
+    email: string;
+    password: string;
+};
+
+export type LoginResponse =
+    | { status: "success" ; error : "" }
+    | { status: "error"; error: string }
+    | { status : "verification_required"; attemptId: number; error : "" };
+
+export type VerifyLoginBody = {
+    code: string;
+    serial?: string;
+};
+
+export type LoginVerification = {
+    id: number;
+    user_id: number;
+    token: string;
+    serial: string | null;
+    type: "login" | "unlock";
+    expires_at: string;
+    ip_address: string;
+    geo: string;
+    user_agent: string;
+};
+
+export type Session = {
+  id: number;
+  user_id: number;
+  token: string;
+  created_at: string;
+  expires_at: string;
 };
 
 export type ChangePasswordBody = {
   currentPassword: string;
   newPassword: string;
 };
-
-// Same structure different names for transparency
-export type LoginResponse =
-  | { status: "success" ; error : "" }
-  | { status: "error"; error: string }
-  | { status : "verification_required"; error : "" };
 
 export type ChangePasswordResponse =
   | { success: true ; error : "" }
@@ -47,21 +72,8 @@ export type Article = {
   published_at:string;
 };
 
-
 export type ArticleResponse = {
   articles : Article[]
-};
-
-export type Session = {
-  id: number;
-  user_id: number;
-  token: string;
-  created_at: string;
-  expires_at: string;
-};
-
-export type VerifyLoginBody = {
-  code: string;
 };
 
 export type YouTubeResponse = {

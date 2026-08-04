@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { LoginResponse } from "@/lib/types";
-import { isSafeNext } from "@/lib/nextPath";
 import Button from "@/components/Button";
+import { isSafeNext } from "@/lib/nextPath";
 
-export default function VerifyLoginClient() {
+export default function VerifyLoginClient(props : {type : string}) {
     const searchParams = useSearchParams();
     const router = useRouter();
 
@@ -58,12 +58,18 @@ export default function VerifyLoginClient() {
                 return;
             }
 
+            const serial = searchParams.get("serial");
+
             const res = await fetch("/api/verify-login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ email, code: fullCode }),
+                body: JSON.stringify({ 
+                    email, 
+                    code: fullCode,
+                    serial: props.type === "unlock" ? serial : undefined,
+                }),
             });
 
             const data = await res.json() as LoginResponse;
@@ -74,9 +80,7 @@ export default function VerifyLoginClient() {
             }
 
             const safeNext = isSafeNext(next) ? next : "/";
-            console.log("NEXT:", next);
-            console.log("SAFE NEXT:", isSafeNext(next));
-
+            
             router.push(safeNext);
             router.refresh();                
 
@@ -95,7 +99,7 @@ export default function VerifyLoginClient() {
     }, [code]);
 
     return (
-        <div className="flex justify-center items-center min-h-[90vh]">
+        <div className="flex flex-1 justify-center items-center mt-[10vh]">
             <form onSubmit={handleSubmit} className="flex flex-col gap-3 text-center">
                 
                 <h2 className="text-3xl font-semibold">Enter verification code</h2>

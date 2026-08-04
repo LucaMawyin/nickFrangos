@@ -9,17 +9,24 @@ import { LoginResponse } from "@/lib/types";
 
 export default function Login(props : {isLoggedIn : boolean}){
 
-    const router = useRouter();
-    const searchParams = useSearchParams();
-
-    const next = searchParams.get("next") || "/";
-
+    // Email, password and error states
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState<string | null>(null);
+    const [errorKey, setErrorKey] = useState(0);
+    function showError(message: string) {
+        setError(message);
+        setErrorKey(prev => prev + 1);
+    }
+
+    // Login form submission
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const next = searchParams.get("next") || "/";
 
     async function handleSubmit(e : React.FormEvent){
+
         e.preventDefault();
 
         const response = await fetch("/api/login", {
@@ -39,29 +46,34 @@ export default function Login(props : {isLoggedIn : boolean}){
             return;
         }
 
+        // Login error response
         if (!response.ok) {
-            setError(data.error || "Login failed");
+            showError(data.error || "Login failed");
             return;
         }
 
+
+        // Push to verification page
         if (data.status === "verification_required") {
 
             router.push(
-            `/verify-login?email=${encodeURIComponent(email)}&next=${encodeURIComponent(next)}`
+                `/verify-login?attempt=${data.attemptId}&next=${encodeURIComponent(next)}`
             );
             return;
         } 
     }
 
+    // Show message if user is already logged in
     if (props.isLoggedIn){
         return (
             <div className="
-                h-[90vh] 
+                flex-1
+                mt-[10vh]
                 flex flex-col 
                 gap-8 
                 justify-center items-center"
             >
-                <h1>You are already logged in</h1>
+                <h1 className="text-[2em]! text-center">You are already logged in</h1>
                 <Button 
                     text="Return to Home" 
                     onClick={() => {
@@ -74,11 +86,11 @@ export default function Login(props : {isLoggedIn : boolean}){
 
 
     return (
-        <div className="flex min-h-[50vh] sm:flex-1 justify-center items-center">
+        <div className="flex flex-1 justify-center items-center mt-[10vh]">
             <Tile 
-            title="Login"
-            disableHover={true}
-            className="md:max-w-[30vw] max-w-full"
+                title="Login"
+                disableHover={true}
+                className="md:max-w-[30vw] max-w-full"
             >
                 <form 
                     autoComplete="on"
@@ -89,7 +101,7 @@ export default function Login(props : {isLoggedIn : boolean}){
                         justify-center
                         gap-3"
                 >
-
+                    {/* Email input */}
                     <label htmlFor="email">Enter Your Email:</label>
                     <input 
                         id="email" 
@@ -100,6 +112,7 @@ export default function Login(props : {isLoggedIn : boolean}){
                         required
                     />
 
+                    {/* Password input */}
                     <label htmlFor="password">Enter Your Password:</label>
                     <div className="flex gap-2 w-full">
                         <input
@@ -112,6 +125,7 @@ export default function Login(props : {isLoggedIn : boolean}){
                             required
                         />
 
+                        {/* Show/hide password button */}
                         <button
                             type="button"
                             className="flex-0 hover:cursor-pointer"
@@ -121,8 +135,17 @@ export default function Login(props : {isLoggedIn : boolean}){
                         </button>
                     </div>
 
+                    {/* Error message */}
                     {error && (
-                        <p className="text-red-500 text-sm text-center">
+                        <p
+                            key={errorKey}
+                            className="
+                                text-red-500
+                                text-sm
+                                text-center
+                                animate-[messageIn_200ms_ease-out]
+                            "
+                        >
                             {error}
                         </p>
                     )}
