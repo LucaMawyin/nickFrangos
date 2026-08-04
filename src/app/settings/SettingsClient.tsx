@@ -307,14 +307,14 @@ export default function SettingsClient(props : {user : User, about : string}){
                         <div className="flex flex-col">
                             <span className="text-gray-500">First Name</span>
                             <span>
-                                {props.user.firstName}
+                                {props.user.first_name}
                             </span>
                         </div>
 
                         <div className="flex flex-col">
                             <span className=" text-gray-500">Last Name</span>
                             <span>
-                                {props.user.lastName}
+                                {props.user.last_name}
                             </span>
                         </div>
 
