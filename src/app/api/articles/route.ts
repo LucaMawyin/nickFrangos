@@ -39,7 +39,18 @@ export async function GET(request: NextRequest) {
 export async function POST(req: Request) {
 
     const cookieStore = await cookies();
-    const session = cookieStore.get("session")?.value;
+    const sessionToken = cookieStore.get("session")?.value;
+
+    const db = await getDB();
+
+    const session = await db.prepare(`
+        SELECT *
+        FROM sessions
+        WHERE token = ?
+        AND expires_at > DATETIME('now')
+    `)
+    .bind(sessionToken)
+    .first();
 
     if (!session) {
         return NextResponse.json(
@@ -62,15 +73,6 @@ export async function POST(req: Request) {
         (formData.get("imageType") as string) ||
         (image ? image.type : null);
 
-        let imageBuffer: Buffer | null = null;
-
-        if (image){
-            const arrayBuffer = await image.arrayBuffer();
-            imageBuffer = Buffer.from(arrayBuffer);
-        }
-
-        const db = await getDB();
-
         // If the id exists then we update the article
         if (id) {
             await db
@@ -87,6 +89,7 @@ export async function POST(req: Request) {
                     END,
                     updated_at = CURRENT_TIMESTAMP
                 WHERE id = ?
+                AND author_id = ?
                 `)
                 .bind(
                     title,
@@ -100,7 +103,9 @@ export async function POST(req: Request) {
 
                     mode === "publish" ? 1 : 0,
 
-                    id
+                    id,
+                    session.user_id
+
                 )
                 .run();
 
@@ -135,14 +140,23 @@ export async function POST(req: Request) {
         const result = await db
             .prepare(`
                 INSERT INTO articles
-                (title, content, image_type, slug, is_draft, is_published)
-                VALUES (?, ?, ?, ?, ?, ?)
+                (
+                    title, 
+                    content, 
+                    image_type, 
+                    slug, 
+                    author_id,
+                    is_draft, 
+                    is_published
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?)
             `)
             .bind(
                 title,
                 content,
                 imageType?.trim() || null,
                 slug,
+                session.user_id,
                 mode === "draft" ? 1 : 0,
                 mode === "publish" ? 1 : 0
             )

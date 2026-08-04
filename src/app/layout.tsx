@@ -20,15 +20,21 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en">
-      <body>
-        <NavBar pageList={pages}/>
-        <div className="pt-[10vh] flex-1 flex flex-col">
-          {children}
-        </div>
-        <Footer/>
-      </body>
-    </html>
-  );
+    return (
+        <html lang="en">
+            <body>
+                <NavBar pageList={pages}/>
+                <div className="
+                    pt-[10vh] 
+                    min-h-[90vh] 
+                    flex-1 
+                    flex
+                    flex-col
+                ">
+                    {children}
+                </div>
+                <Footer/>
+            </body>
+        </html>
+    );
 }

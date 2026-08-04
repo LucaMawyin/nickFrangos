@@ -13,10 +13,21 @@ export async function deleteArticle(id: number) {
 
     const db = await getDB();
 
-    await db
-        .prepare("DELETE FROM articles WHERE id = ?")
-        .bind(id)
+    const result = await db
+        .prepare(`
+            DELETE FROM articles
+            WHERE id = ?
+            AND author_id = ?
+        `)
+        .bind(
+            id,
+            session.user_id
+        )
         .run();
+
+    if (result.meta.changes === 0) {
+        throw new Error("Article not found or unauthorized");
+    }
 
     redirect("/articles");
 }
