@@ -4,13 +4,14 @@ import { useEffect, useState } from "react";
 import "./global.css";
 import Title from "@/components/Title"
 import Button from "@/components/Button"
-import Icon from "@/components/Icon";
 import About from "@/components/About";
-import { SiteContent, YouTubeResponse } from "@/lib/types";
-import { links } from "@/lib/links";
+import { SiteContent, SocialLink, YouTubeResponse } from "@/lib/types";
+import { getIcon } from "@/lib/icons";
+import { Icon } from "@iconify/react";
 
 export default function Home(props : {
     content : SiteContent,
+    links: SocialLink[],
 }) {
 
   const [loaded, setLoaded] = useState(false);
@@ -80,9 +81,46 @@ export default function Home(props : {
           >
 
             <div className="flex flex-row flex-wrap gap-5">
-              {Object.entries(links).map(([name, url]) => (
-                <Icon key={name} path={name} link={url} />
-              ))}
+                {props.links.map((link) => (
+                    <a
+                        key={link.title}
+                        href={link.url}
+                        aria-label={link.title}
+                        target={link.url.startsWith("mailto:") ? undefined : "_blank"}
+                        rel={link.url.startsWith("mailto:") ? undefined : "noopener noreferrer"}
+                        className={`
+                            flex items-center justify-center
+                            transition-all duration-(--transition-duration) ease-out
+
+                            hover:scale-(--link-scale)
+
+                            ${loaded 
+                                ? "opacity-100 translate-y-0" 
+                                : "opacity-0 translate-y-4"
+                            }
+                        `}
+                    >
+                        <span className="
+                            flex 
+                            h-[clamp(3rem,5vw,4rem)] 
+                            w-[clamp(3rem,5vw,4rem)] 
+                            items-center 
+                            justify-center 
+                            bg-black 
+                            squircle
+                            transform
+                            transition-transform 
+                            duration-(--transition-time) 
+                            hover:scale-110
+                        ">
+                            <Icon
+                                icon={getIcon(link.url)}
+                                color="white"
+                                className="h-full w-full p-[17.5%]"
+                            />
+                        </span>
+                    </a>
+                ))}
             </div>
 
             <Title text="Hi" />

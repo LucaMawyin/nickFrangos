@@ -40,7 +40,7 @@ export default function CreatePage() {
       <Tile 
         title="Create an Article"
         disableHover={true}
-        className="flex-0 min-w-fit"
+        className="flex-0 min-w-fit squircle-large"
       >
         <div className="
           flex flex-col 
@@ -64,7 +64,7 @@ export default function CreatePage() {
       {showDrafts && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
           <Tile 
-            className="bg-white max-w-full md:max-w-96"
+            className="bg-white max-w-full md:max-w-96 squircle"
             disableHover={true}
           >
 

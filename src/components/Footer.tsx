@@ -3,49 +3,47 @@
 
 import { links } from "@/lib/links";
 import { pages } from "@/lib/pages";
+import { SocialLink } from "@/lib/types";
 import { usePathname } from "next/navigation";
 
 function capitalize(name: string) {
   return name.charAt(0).toUpperCase() + name.slice(1);
 }
 
+export default function Footer(props : {links: SocialLink[]}) {
+    const pathname = usePathname();
 
+    const requiresLogin = pages.some((page) => {
+        if (page.href.startsWith("#")) return false;
 
-export default function Footer() {
-  const pathname = usePathname();
+        const base = "/" + page.href;
 
-  const requiresLogin = pages.some((page) => {
-    if (page.href.startsWith("#")) return false;
+        return (
+        (pathname === base || pathname.startsWith(base + "/")) &&
+        page.requireLogin
+        );
+    });
 
-    const base = "/" + page.href;
+    if (requiresLogin) return null;
 
     return (
-      (pathname === base || pathname.startsWith(base + "/")) &&
-      page.requireLogin
+        <footer className="w-full py-4 flex flex-col items-center gap-3 text-sm text-gray-500">
+        
+            <p>© {new Date().getFullYear()} Nicholas Frangos</p>
+
+            <div className="flex gap-4">
+                {props.links.map((link) => (
+                    <a
+                        key={link.id}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        {link.title}
+                    </a>
+                ))}
+            </div>
+
+        </footer>
     );
-  });
-
-  if (requiresLogin) return null;
-
-  return (
-    <footer className="w-full py-4 flex flex-col items-center gap-3 text-sm text-gray-500">
-      
-      <p>© {new Date().getFullYear()} Nicholas Frangos</p>
-
-      <div className="flex gap-4">
-        {Object.entries(links).map(([name, href]) => (
-          <a
-            key={href}
-            href={href}
-            target={href.startsWith("http") ? "_blank" : undefined}
-            rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-            className="hover:text-gray-800 transition"
-          >
-            {capitalize(name)}
-          </a>
-        ))}
-      </div>
-
-    </footer>
-  );
 }

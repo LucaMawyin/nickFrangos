@@ -48,3 +48,8 @@ CREATE TABLE site_content (
     id INTEGER PRIMARY KEY autoincrement,
     about TEXT
 );
+CREATE TABLE links (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL UNIQUE,
+    url TEXT NOT NULL UNIQUE
+);

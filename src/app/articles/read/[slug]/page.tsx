@@ -3,11 +3,11 @@ import { getDB } from "@/lib/db";
 import { deleteArticle } from "./actions";
 import { validateSession } from "@/lib/auth";
 import DeleteButton from "@/components/DeleteButton";
-import EditButton from "@/components/EditButton";
 import Link from "next/link";
 import LocalDateTime from "@/components/LocalDateTime";
 import ReactMarkdown from "react-markdown";
 import { getImageDataUrl } from "@/lib/r2";
+import EditArticleButton from "@/components/EditArticleButton";
 
 export default async function ArticlePage({
   params,
@@ -80,7 +80,10 @@ export default async function ArticlePage({
                         sm:flex-row justify-between
                         w-full    
                     ">
-                        <EditButton id={article.id} className="w-full sm:w-48"/>
+                        <EditArticleButton
+                            className="w-full sm:w-48"
+                            articleId={article.id}
+                        />
 
                         <DeleteButton 
                             className="w-full sm:w-48"

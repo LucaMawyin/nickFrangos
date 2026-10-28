@@ -262,7 +262,7 @@ export default function CreateClient(props : {title:string; initialData? : any})
         <Tile 
           title={props.title}
           disableHover={true}
-          className=" max-w-full md:mb-6"
+          className=" max-w-full md:mb-6 squircle-large"
           >
           <form 
             className="

@@ -130,3 +130,8 @@ export interface Env {
   IPINFO_TOKEN : string;
 };
 
+export type SocialLink = {
+    id: number;
+    title: string;
+    url: string;
+};

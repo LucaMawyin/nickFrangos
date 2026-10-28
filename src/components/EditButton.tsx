@@ -1,22 +1,32 @@
-"use client";
+import Button from "./Button";
+import { Pencil } from "lucide-react";
 
-import { useRouter } from "next/navigation";
-import Button from "@/components/Button";
-
-export default function EditButton(props : {
-  id : number; 
-  className?: string;
+export default function EditButton({
+    action,
+    className = "",
+    disabled = false,
+    x,
+    y,
+}: {
+    action: () => void;
+    className?: string;
+    disabled?: boolean;
+    x?: number;
+    y?: number;
 }) {
-  const router = useRouter();
-
-  return (
-    <Button
-      text="Edit"
-      variant="secondary"
-      className={props.className}
-      onClick={() => {
-        router.push(`/articles/create-article/load-draft?id=${props.id}`);
-      }}
-    />
-  );
+    return (
+        <Button
+            type="button"
+            disabled={disabled}
+            className={className}
+            onClick={(e) => {
+                e.preventDefault();
+                action();
+            }}
+            x={x}
+            y={y}
+        >
+            <Pencil size={18} />
+        </Button>
+    );
 }

@@ -2,9 +2,10 @@
 @import "tailwindcss";
 
 :root{
-  --primary-blue: #48a1fa;
-  --primary-blue-hover: #2f8fe6;
-  --transition-time: 200ms;
+    --primary-blue: #48a1fa;
+    --primary-blue-hover: #2f8fe6;
+    --transition-time: 200ms;
+    --bg: #ffffff;
 }
 
 html{
@@ -35,4 +36,31 @@ input,textarea{
 input:focus,textarea:focus{
   outline: none;
   box-shadow: 0 0 0 2px var(--color-blue-400);
+}
+
+.squircle {
+    border-radius: 25%;
+
+    @supports (corner-shape: squircle) {
+        corner-shape: squircle;
+        border-radius: 48px;
+    }
+}
+
+.squircle-medium {
+    border-radius: 1em;
+
+    @supports (corner-shape: squircle) {
+        corner-shape: squircle;
+        border-radius: 48px;
+    }
+}
+
+.squircle-large {
+    border-radius: 1.5em;
+
+    @supports (corner-shape: squircle) {
+        corner-shape: squircle;
+        border-radius: 48px;
+    }
 }

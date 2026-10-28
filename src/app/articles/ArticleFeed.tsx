@@ -91,7 +91,17 @@ export default function ArticleFeed(props : {articles : Article[]}){
                             <Tile 
                                 key = {article.id}
                                 title={article.title}
-                                className="max-w-full min-w-0 h-full w-full p-[5%]"
+                                className="
+                                    max-w-full 
+                                    min-w-0 
+                                    h-full 
+                                    w-full 
+                                    p-[5%] 
+                                    rounded-2xl!
+                                    border 
+                                    border-gray-200/70
+                                    hover:border-gray-300/30
+                                "
                                 titleClassName="text-[clamp(2rem,2.5vw,2.25rem)]"
                             >
                                 {article.image && (
